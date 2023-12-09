@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 export default function ClaimButton() {
   const [status, setStatus] = useState("disconnected");
   const [account, setAccount] = useState();
+  const [inscriptions, setInscriptions] = useState([]);
   const className =
     "my-32 flex items-center justify-center bg-orange-500 hover:bg-orange-700 font-bold py-4 px-6 text-xl md:text-2xl rounded-md";
   useAsyncEffect(async () => {
@@ -15,13 +16,16 @@ export default function ClaimButton() {
       return;
     }
     const accounts = await wallet.getAccounts();
-    if (accounts) {
+    if (accounts && accounts.length > 0) {
       setStatus("connected");
       setAccount(accounts[0]);
       return;
     }
     setStatus("disconnected");
   }, []);
+  function fetchInscriptions() {
+    
+  }
   if (status === "not_installed")
     return (
       <button
@@ -38,12 +42,12 @@ export default function ClaimButton() {
       <button
         className={className}
         onClick={async () => {
-          const account = await (window as any).unisat.requetAccount();
+          const account = await (window as any).unisat.requestAccounts();
         }}
       >
-        Connect
+        Connect Wallet to Claim
       </button>
     );
   if (status === "connected")
-    return <button className={className}>{account}</button>;
+    return <button className={className}>Check Deploy Inscriptions</button>;
 }

@@ -5,7 +5,7 @@ import './globals.css'
 const lora = Lora({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'depr',
+  title: '{ op: depr }',
   description: 'Airdrop for deployers',
 }
 

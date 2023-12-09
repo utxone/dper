@@ -6,11 +6,15 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prebuild": "prisma generate",
+    "predev": "prisma generate"
   },
   "dependencies": {
+    "@prisma/client": "^5.7.0",
     "ahooks": "^3.7.8",
     "next": "14.0.3",
+    "prisma": "^5.7.0",
     "react": "^18",
     "react-dom": "^18"
   },
