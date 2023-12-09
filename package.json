@@ -13,7 +13,9 @@
   "dependencies": {
     "@prisma/client": "^5.7.0",
     "ahooks": "^3.7.8",
+    "framer-motion": "^10.16.16",
     "next": "14.0.3",
+    "ord-tools": "^1.0.0",
     "prisma": "^5.7.0",
     "react": "^18",
     "react-dom": "^18"
