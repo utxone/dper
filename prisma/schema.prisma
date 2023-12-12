@@ -11,7 +11,6 @@ datasource db {
 model Record {
   id           String   @id @default(cuid())
   create_at    DateTime @default(now())
-  inscprion_id String
   ticker       String
   holder       String
   hash         String
