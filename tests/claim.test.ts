@@ -1,8 +1,8 @@
 import { describe, expect, test } from "vitest";
-import dotenv from 'dotenv'
+import dotenv from "dotenv";
 import { inscribeAndSend, verifyMessage, transferBtc } from "../lib/claim";
 
-dotenv.config()
+dotenv.config();
 describe(
   "claim",
   () => {
@@ -17,7 +17,6 @@ describe(
     });
     test("test transaction", async () => {
       const hash = await inscribeAndSend();
-      console.log(hash);
     });
   },
   {

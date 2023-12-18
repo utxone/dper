@@ -10,12 +10,29 @@ import {
 import { AddressType } from "ord-tools/lib/types";
 import { blockHeight, unisatApiUrl } from "@/lib/constant";
 import { verifyMessage } from "@/lib/claim";
+import { calculateFee } from "@/lib/utils";
 
 export async function POST(request: Request) {
   const body = await request.json();
-  const { txid, ticker, signature, address, pubkey } = body;
+  const { txid, ticker, signature, address, pubkey, feeRate } = body;
+  const result = await prisma.record.findFirst({
+    where: {
+      ticker,
+    },
+  });
+  if (result) {
+    return Response.json({ msg: "Ticker already claimed" });
+  }
+  /// save to database
+  const record = await prisma.record.create({
+    data: {
+      ticker,
+      holder: address,
+      hash: "",
+    },
+  });
   /// check if the body is valid
-  if (!txid || !ticker || !signature || !pubkey) {
+  if (!txid || !ticker || !signature || !pubkey  || !feeRate) {
     return Response.json({ msg: "invalid body" });
   }
   /// verify signature
@@ -59,7 +76,12 @@ export async function POST(request: Request) {
   if (tx.msg !== "ok") {
     return Response.json({ msg: "invalid txid" });
   }
-  /// TODO check tx amount
+  /// check tx output
+  const fee = calculateFee({ feeRate });
+  console.log(tx.outSatoshi, fee);
+  if(tx.outSatoshi !== fee) {
+    return Response.json({msg: "invalid tx"})
+  }
   /// inscribe and transfer
   const wif = process.env.WALLET_WIF!;
   const wallet = new LocalWallet(wif, NetworkType.TESTNET, AddressType.P2TR);
@@ -99,15 +121,15 @@ export async function POST(request: Request) {
     network: networks.testnet,
   };
   const inscribeTx = await inscribe(params);
-  const insTx =  inscribeTx.extractTransaction();
+  const insTx = inscribeTx.extractTransaction();
   const transferTx = await wallet.pushPsbt(insTx.toHex());
   await new Promise((resolve) => setTimeout(resolve, 2000));
   const newUtxos = await brc20Api.getAddressUtxo(walletAddress);
   const inscriptionId = `${transferTx}i0`;
-  const inscriptionsUtxos = await brc20Api.getInscriptionUtxo(inscriptionId)
+  const inscriptionsUtxos = await brc20Api.getInscriptionUtxo(inscriptionId);
   console.log(inscriptionsUtxos);
-  
-  if(!inscriptionsUtxos) {
+
+  if (!inscriptionsUtxos) {
     return Response.json({ msg: "error occurred" });
   }
   const sendOrdParams = {
@@ -139,10 +161,9 @@ export async function POST(request: Request) {
   const ordTx = transferPsbt.extractTransaction();
   const transferHash = await wallet.pushPsbt(ordTx.toHex());
   /// save to database
-  await prisma.record.create({
+  await prisma.record.update({
+    where: { id: record.id },
     data: {
-      ticker,
-      holder: address,
       hash: transferHash,
     },
   });

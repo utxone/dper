@@ -11,7 +11,7 @@ export function calculateFee({ feeRate }: { feeRate: number }) {
   const contentTypeSize = 100; // the size of contentType
   const fileCount = 1;
   const devFee = 2000; // the fee for developer
-  const transferSize = 100;
+  const transferSize = 214; // send ord miner fee
 
   const balance = inscriptionBalance * fileCount;
 

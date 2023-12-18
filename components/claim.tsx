@@ -21,13 +21,19 @@ const ConfirmModal = ({
   signature: string | undefined;
   address: string | undefined;
 }) => {
+  const testnet = true;
   const [isLoading, setIsLoading] = useState(false);
   const [feeRate, setFeeRate] = useState(0);
+  const [txHash, setTxHash] = useState("");
   const totalFee = useMemo(() => {
     return calculateFee({ feeRate });
   }, [feeRate]);
   useAsyncEffect(async () => {
-    const res = await fetch("https://mempool.space/api/v1/fees/recommended");
+    const res = await fetch(
+      `https://mempool.space/${
+        testnet ? "testnet/" : ""
+      }api/v1/fees/recommended`
+    );
     const feeSummary = await res.json();
     const feeRate = feeSummary.halfHourFee;
     setFeeRate(feeRate);
@@ -47,7 +53,7 @@ const ConfirmModal = ({
         pubkey,
         testnet: true,
       });
-      setShowConfirmModal(false);
+      setTxHash(txHash);
     } catch (error) {
       if (error instanceof Error) {
         console.log(error);
@@ -56,6 +62,11 @@ const ConfirmModal = ({
       setIsLoading(false);
     }
   }
+  const txExplorerUrl = useMemo(() => {
+    return `https://https://mempool.space/${
+      testnet ? "testnet/" : "/"
+    }tx/${txHash}`;
+  }, [testnet, txHash]);
   return (
     <Modal
       showModal={showConfirmModal}
@@ -74,7 +85,7 @@ const ConfirmModal = ({
           </div>
           <div className="flex flex-row justify-between">
             <span>Transfer inscribe fee</span>
-            <span>{calculateFee({feeRate})} sats</span>
+            <span>{calculateFee({ feeRate })} sats</span>
           </div>
           <div className="flex flex-row justify-between">
             <span>Transfer send fee</span>
@@ -82,22 +93,34 @@ const ConfirmModal = ({
           </div>
           <div className="flex flex-row justify-between">
             <span className="font-bold">Total fee</span>
-            <span>{calculateFee({feeRate}) } sats</span>
+            <span>{calculateFee({ feeRate })} sats</span>
           </div>
         </div>
+
         <div className="my-4 px-6 flex flex-row items-center justify-center">
-          <button
-            className="h-16 w-60 text-xl md:text-2xl rounded-lg flex items-center justify-center bg-orange-500 hover:bg-orange-600 py-4 px-6"
-            onClick={() => {
-              confirm();
-            }}
-          >
-            {isLoading ? (
-              <span className="loader scale-50"></span>
-            ) : (
-              <span>Claim 1000 depr</span>
-            )}
-          </button>
+          {txHash ? (
+            <div className="flex flex-col items-center">
+              <span className="text-orange-500">
+                Claim successfully! Please check your wallet.{" "}
+              </span>
+              <a href={txExplorerUrl} target="_blank">
+                View on mempool
+              </a>
+            </div>
+          ) : (
+            <button
+              className="h-16 w-60 text-xl md:text-2xl rounded-lg flex items-center justify-center bg-orange-500 hover:bg-orange-600 py-4 px-6"
+              onClick={() => {
+                confirm();
+              }}
+            >
+              {isLoading ? (
+                <span className="loader scale-50"></span>
+              ) : (
+                <span>Claim 1000 depr</span>
+              )}
+            </button>
+          )}
         </div>
       </div>
     </Modal>
@@ -142,7 +165,6 @@ export default function Claim() {
     }
     const accounts = await wallet.getAccounts();
     const pubkey = await wallet.getPublicKey();
-    console.log(pubkey);
     if (accounts && accounts.length > 0) {
       setAccount(() => accounts[0]);
     }
@@ -211,6 +233,7 @@ export default function Claim() {
         />
         <button
           className="h-20 w-40 rounded-r-lg flex items-center justify-center bg-orange-500 hover:bg-orange-600 py-4 px-6"
+          disabled={isLoading}
           onClick={claim}
         >
           {isLoading ? <span className="loader"></span> : <span>CLAIM</span>}

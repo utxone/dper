@@ -62,6 +62,7 @@ export async function claim({
     }),
   });
   const txHash = await res.json();
+  return txHash
 }
 
 /// verify bitcoin signed message
@@ -148,7 +149,6 @@ export async function transferBtc() {
   const brc20Api = new OpenApiService("bitcoin_testnet");
   const walletAddress = wallet.address;
   const walletPubkey = wallet.getPublicKey();
-  console.log(walletPubkey, walletAddress);
   const utxosOutputs = await brc20Api.getAddressUtxo(walletAddress);
   console.log(utxosOutputs);
   const utxos = utxosOutputs.map((v) => ({
