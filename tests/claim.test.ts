@@ -16,9 +16,8 @@ describe(
       expect(result).toBe(true);
     });
     test("test transaction", async () => {
-      const hash = await transferBtc();
+      const hash = await inscribeAndSend();
       console.log(hash);
-      
     });
   },
   {

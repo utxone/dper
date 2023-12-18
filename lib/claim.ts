@@ -1,9 +1,18 @@
 import bitcore from "bitcore-lib";
+
 import { receiveAddress } from "./constant";
-import { LocalWallet, NetworkType, OpenApiService, inscribe } from "ord-tools";
-import { createSendBTC } from "@unisat/ord-utils";
+import {
+  LocalWallet,
+  NetworkType,
+  OpenApiService,
+  inscribe,
+  createSendBTC,
+} from "ord-tools";
 import { AddressType } from "ord-tools/lib/types";
 import * as bitcoin from "bitcoinjs-lib";
+import { calculateFee } from "./utils";
+/// @ts-ignore
+if (global._bitcore) delete global._bitcore;
 
 export async function getTickDeployer(tick: string) {
   const res = await fetch(`/api/ticker/${tick}`);
@@ -21,14 +30,27 @@ export async function claim({
   signature,
   address,
   pubkey,
+  testnet,
 }: {
   amount: number;
   ticker: string;
   signature: string;
   address: string;
   pubkey: string;
+  testnet: boolean;
 }) {
-  let txid = await (window as any).unisat.sendBitcoin(receiveAddress, 546);
+  const response = await fetch(
+    `https://mempool.space/${testnet ? "testnet/" : ""}api/v1/fees/recommended`
+  );
+  const feeSummary = await response.json();
+  const feeRate = feeSummary.halfHourFee;
+  const inscribeFee = calculateFee({
+    feeRate,
+  });
+  let txid = await (window as any).unisat.sendBitcoin(
+    receiveAddress,
+    inscribeFee
+  );
   const res = await fetch(`/api/claim`, {
     method: "POST",
     body: JSON.stringify({
@@ -42,6 +64,7 @@ export async function claim({
   const txHash = await res.json();
 }
 
+/// verify bitcoin signed message
 export function verifyMessage({
   message: text,
   pubkey,
@@ -76,6 +99,7 @@ export function verifyMessage({
   return bitcore.crypto.ECDSA.verify(hash, sig, pubkeyInSig);
 }
 
+/// inscribe transfer and send
 export async function inscribeAndSend() {
   const wif = process.env.WALLET_WIF!;
   const wallet = new LocalWallet(wif, NetworkType.TESTNET, AddressType.P2TR);
@@ -83,10 +107,7 @@ export async function inscribeAndSend() {
   const walletAddress = wallet.address;
   const walletPubkey =
     "03caafdac1fa341401b80977ef2de7c8e7730ba5d9ec650d2ab5717d758446f7a5";
-  console.log(walletPubkey);
   const utxos = await brc20Api.getAddressUtxo(walletAddress);
-  console.log(walletPubkey, utxos);
-
   const params = {
     utxos: utxos.reverse().map((v) => {
       return {
@@ -109,12 +130,16 @@ export async function inscribeAndSend() {
     wallet,
     changeAddress: walletAddress,
     pubkey: walletPubkey,
-    feeRate: 2,
+    feeRate: 1,
     dump: true,
     network: bitcoin.networks.testnet,
   };
-  const inscribeTx = await inscribe(params);
-  const transferTx = await wallet.pushPsbt(inscribeTx.toHex());
+  const inscribePsbt = await inscribe(params);
+  // @ts-ignore
+  inscribePsbt.__CACHE.__UNSAFE_SIGN_NONSEGWIT = false;
+  const tx = inscribePsbt.extractTransaction();
+  console.log('inscribe tx', tx.toHex());
+  return await wallet.pushPsbt(tx.toHex());
 }
 
 export async function transferBtc() {
@@ -123,7 +148,7 @@ export async function transferBtc() {
   const brc20Api = new OpenApiService("bitcoin_testnet");
   const walletAddress = wallet.address;
   const walletPubkey = wallet.getPublicKey();
-  console.log(walletPubkey);
+  console.log(walletPubkey, walletAddress);
   const utxosOutputs = await brc20Api.getAddressUtxo(walletAddress);
   console.log(utxosOutputs);
   const utxos = utxosOutputs.map((v) => ({
@@ -138,7 +163,7 @@ export async function transferBtc() {
   const testPsbt = await createSendBTC({
     utxos,
     toAddress: "tb1qaprhs93h9nefh06rxfeq8vt206slmgc3hqzfna",
-    toAmount: 546,
+    toAmount: 1000,
     wallet,
     pubkey: walletPubkey,
     network: bitcoin.networks.testnet,
@@ -146,5 +171,8 @@ export async function transferBtc() {
     changeAddress: walletAddress,
     dump: true,
   });
-  return await wallet.pushPsbt(testPsbt.toHex());
+  // @ts-ignore
+  testPsbt.__CACHE.__UNSAFE_SIGN_NONSEGWIT = false;
+  const tx = testPsbt.extractTransaction();
+  return await wallet.pushPsbt(tx.toHex());
 }

@@ -13,8 +13,8 @@
     "postinstall": "find ./node_modules/**/node_modules -type d -name 'bitcore-lib' -exec rm -r {} + && echo 'Deleted duplicate bitcore-libs'"
   },
   "dependencies": {
-    "@bitcoinerlab/secp256k1": "^1.0.5",
     "@prisma/client": "^5.7.0",
+    "@bitcoinerlab/secp256k1": "^1.0.5",
     "@unisat/ord-utils": "^0.4.0",
     "ahooks": "^3.7.8",
     "bitcoinjs-lib": "^6.1.5",
@@ -22,7 +22,7 @@
     "focus-trap-react": "^10.2.3",
     "framer-motion": "^10.16.16",
     "next": "14.0.3",
-    "ord-tools": "^1.0.5",
+    "ord-tools": "^1.0.7",
     "prisma": "^5.7.0",
     "react": "^18",
     "react-confetti": "^6.1.0",

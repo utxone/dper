@@ -1,3 +1,3 @@
-export const receiveAddress = 'tb1pvkd8uz46k78yqcf83v6fk20h3xm8en2rywp52dpq0dajr7ldk7qs4wedka'
+export const receiveAddress = 'tb1psahg2qmurajcnv6mjpws7aaefk9gnwp3xhn0x63v3n3pz8z9c2dspamp6v'
 export const unisatApiUrl = 'https://open-api-testnet.unisat.io/v1'
 export const blockHeight = 1000000000

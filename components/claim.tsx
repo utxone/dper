@@ -6,10 +6,8 @@ import { useAsyncEffect } from "ahooks";
 import Confetti from "./confetti";
 import { Dispatch, SetStateAction, useMemo, useState } from "react";
 import Modal from "./modal";
-import { OpenApiService } from "ord-tools";
 import { blockHeight } from "@/lib/constant";
 
-const FILE_SIZE = 58;
 const ConfirmModal = ({
   showConfirmModal,
   setShowConfirmModal,
@@ -26,7 +24,7 @@ const ConfirmModal = ({
   const [isLoading, setIsLoading] = useState(false);
   const [feeRate, setFeeRate] = useState(0);
   const totalFee = useMemo(() => {
-    return calculateFee(feeRate, FILE_SIZE) + feeRate * 100;
+    return calculateFee({ feeRate });
   }, [feeRate]);
   useAsyncEffect(async () => {
     const res = await fetch("https://mempool.space/api/v1/fees/recommended");
@@ -47,6 +45,7 @@ const ConfirmModal = ({
         signature,
         amount: totalFee,
         pubkey,
+        testnet: true,
       });
       setShowConfirmModal(false);
     } catch (error) {
@@ -75,7 +74,7 @@ const ConfirmModal = ({
           </div>
           <div className="flex flex-row justify-between">
             <span>Transfer inscribe fee</span>
-            <span>{calculateFee(feeRate, FILE_SIZE)} sats</span>
+            <span>{calculateFee({feeRate})} sats</span>
           </div>
           <div className="flex flex-row justify-between">
             <span>Transfer send fee</span>
@@ -83,7 +82,7 @@ const ConfirmModal = ({
           </div>
           <div className="flex flex-row justify-between">
             <span className="font-bold">Total fee</span>
-            <span>{calculateFee(feeRate, FILE_SIZE) + feeRate * 100} sats</span>
+            <span>{calculateFee({feeRate}) } sats</span>
           </div>
         </div>
         <div className="my-4 px-6 flex flex-row items-center justify-center">
