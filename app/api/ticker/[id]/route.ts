@@ -19,7 +19,7 @@ export async function GET(
   const data = await res.json();
   const record = await prisma.record.findFirst({
     where: {
-      id: {
+      ticker: {
         equals: params.id,
         mode: 'insensitive',
       }

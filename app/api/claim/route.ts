@@ -8,7 +8,7 @@ import {
   inscribe,
 } from "ord-tools";
 import { AddressType } from "ord-tools/lib/types";
-import { blockHeight, unisatApiUrl } from "@/lib/constant";
+import { TESTNET, blockHeight, unisatApiUrl } from "@/lib/constant";
 import { verifyMessage } from "@/lib/claim";
 import { calculateFee } from "@/lib/utils";
 
@@ -31,6 +31,7 @@ export async function POST(request: Request) {
     data: {
       ticker,
       holder: address,
+      txid,
       hash: "",
     },
   });
@@ -65,25 +66,24 @@ export async function POST(request: Request) {
   }
   /// check creator
   if (token.data.creator !== address) {
-    return Response.json({ msg: "invalid signature" });
+    return Response.json({ msg: "Invalid signature" });
   }
 
   /// check txid
-  const resTx = await fetch(`${unisatApiUrl}/indexer/tx/${txid}`, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + process.env.UNISAT_API_KEY,
-    },
-  });
-  const tx = await resTx.json();
-  if (tx.msg !== "ok") {
-    return Response.json({ msg: "invalid txid" });
-  }
-  /// check tx output
-  const fee = calculateFee({ feeRate });
-  console.log(tx.data.outSatoshi, fee);
-  if (tx.outSatoshi !== fee) {
-    return Response.json({ msg: "invalid tx" });
+  try {
+    const resTx = await fetch(
+      `https://mempool.space/${TESTNET ? "testnet/" : ""}api/tx/${txid}`,
+    );
+    if (resTx.status != 200) {
+      return Response.json({ msg: "invalid txid" });
+    }
+    const tx = await resTx.json();
+    const fee = calculateFee({ feeRate });
+    if (tx.vout[0].value !== fee.total) {
+      return Response.json({ msg: "invalid tx" });
+    }
+  } catch (error) {
+    return Response.json({ msg: "error occurred" });
   }
   /// inscribe and transfer
   const wif = process.env.WALLET_WIF!;
@@ -119,13 +119,13 @@ export async function POST(request: Request) {
     wallet,
     changeAddress: walletAddress,
     pubkey: walletPubkey,
-    feeRate: 2,
+    feeRate,
     dump: true,
     network: networks.testnet,
   };
   const inscribeTx = await inscribe(params);
-  const insTx = inscribeTx.extractTransaction();
-  const transferTx = await wallet.pushPsbt(insTx.toHex());
+  // const insTx = inscribeTx.extractTransaction();
+  const transferTx = await wallet.pushPsbt(inscribeTx.toHex());
   await new Promise((resolve) => setTimeout(resolve, 2000));
   const newUtxos = await brc20Api.getAddressUtxo(walletAddress);
   const inscriptionId = `${transferTx}i0`;
@@ -154,7 +154,7 @@ export async function POST(request: Request) {
     changeAddress: walletAddress,
     pubkey: walletPubkey,
     outputValue: 546,
-    feeRate: 1,
+    feeRate,
     dump: true,
     network: networks.testnet,
   };

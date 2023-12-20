@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import Claim from "@/components/claim";
+import ClaimRecord from "@/components/records";
 import { martian } from "@/lib/fonts";
 
 export default function Home() {
@@ -21,7 +22,9 @@ export default function Home() {
       </h2>
       <div className="mt-30"></div>
       <Claim></Claim>
-      <div className="flex flex-row space-x-4 text-xl text-orange-400">
+      <ClaimRecord></ClaimRecord>
+      
+      <div className="mt-32 flex flex-row space-x-4 text-xl text-orange-400">
         <a
           href="https://unisat.io/brc20/depr"
           target="_blank"
@@ -37,7 +40,7 @@ export default function Home() {
           telegram
         </a>
       </div>
-      <span className="mt-2 text-stone-600">
+      <span className="mt-2 text-stone-600 break-all text-center">
         donate: bc1pvkd8uz46k78yqcf83v6fk20h3xm8en2rywp52dpq0dajr7ldk7qszx0zvj
       </span>
     </main>

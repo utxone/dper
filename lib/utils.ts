@@ -1,12 +1,24 @@
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+dayjs.extend(relativeTime);
+
+export const dateFromNow = (date: string | Date) => {
+  return dayjs(date).fromNow(); // 22 years ago
+};
+
 export function compactAddress(address: string) {
   return address.slice(0, 6) + "..." + address.slice(-4);
 }
 
-export function calculateFee({ feeRate }: { feeRate: number }) {
-  const fileSize = Buffer.from(
-    '{"p":"brc-20","op":"transfer","tick":"bool","amt":"1"}',
+export function inscriptionContent(ticker: string, amt: string) {
+  return Buffer.from(
+    `{"p":"brc-20","op":"transfer","tick":"${ticker}","amt":"${amt}"}`,
     "utf8"
-  ).buffer.byteLength;
+  );
+}
+
+export function calculateFee({ feeRate }: { feeRate: number }) {
+  const fileSize = inscriptionContent("bool", "1000").length;
   const inscriptionBalance = 546; // the balance in each inscription
   const contentTypeSize = 100; // the size of contentType
   const fileCount = 1;
@@ -15,9 +27,9 @@ export function calculateFee({ feeRate }: { feeRate: number }) {
 
   const balance = inscriptionBalance * fileCount;
 
-  const addrSize = 22 + 1;
+  const addrSize = 34 + 1;
 
-  const baseSize = 88;
+  const baseSize = 44;
   let networkSats = Math.ceil(
     ((fileSize + contentTypeSize) / 4 + (baseSize + 8 + addrSize + 8 + 23)) *
       feeRate
@@ -35,6 +47,13 @@ export function calculateFee({ feeRate }: { feeRate: number }) {
         feeRate
     );
   }
-  const total = balance + networkSats;
-  return total + devFee + transferSize * feeRate;
+  const inscribeFee = balance + networkSats;
+  const transferFee = transferSize * feeRate;
+  const total = inscribeFee + devFee + transferFee;
+  return {
+    inscribeFee,
+    devFee,
+    transferFee,
+    total,
+  };
 }

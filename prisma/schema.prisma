@@ -14,4 +14,5 @@ model Record {
   ticker       String
   holder       String
   hash         String
+  txid         String
 }

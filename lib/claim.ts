@@ -30,26 +30,18 @@ export async function claim({
   signature,
   address,
   pubkey,
-  testnet,
+  feeRate
 }: {
   amount: number;
   ticker: string;
   signature: string;
   address: string;
   pubkey: string;
-  testnet: boolean;
+  feeRate: number
 }) {
-  const response = await fetch(
-    `https://mempool.space/${testnet ? "testnet/" : ""}api/v1/fees/recommended`
-  );
-  const feeSummary = await response.json();
-  const feeRate = feeSummary.halfHourFee;
-  const inscribeFee = calculateFee({
-    feeRate,
-  });
   let txid = await (window as any).unisat.sendBitcoin(
     receiveAddress,
-    inscribeFee
+    amount
   );
   const res = await fetch(`/api/claim`, {
     method: "POST",
@@ -63,6 +55,9 @@ export async function claim({
     }),
   });
   const txHash = await res.json();
+  if(txHash.msg) {
+    throw new Error(txHash.msg)
+  }
   return txHash.tx
 }
 

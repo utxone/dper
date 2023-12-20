@@ -4,9 +4,16 @@ import { claim, getTickDeployer } from "@/lib/claim";
 import { calculateFee, compactAddress } from "@/lib/utils";
 import { useAsyncEffect } from "ahooks";
 import Confetti from "./confetti";
-import { Dispatch, SetStateAction, useMemo, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import Modal from "./modal";
-import { blockHeight } from "@/lib/constant";
+import { TESTNET, blockHeight } from "@/lib/constant";
 
 const ConfirmModal = ({
   showConfirmModal,
@@ -21,52 +28,60 @@ const ConfirmModal = ({
   signature: string | undefined;
   address: string | undefined;
 }) => {
-  const testnet = true;
+  const [errorMsg, setErrorMsg] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [feeRate, setFeeRate] = useState(0);
   const [txHash, setTxHash] = useState("");
+  useEffect(() => {
+    if (!showConfirmModal) {
+      setErrorMsg("");
+      setIsLoading(false);
+      setTxHash("");
+    }
+  }, [showConfirmModal]);
   const totalFee = useMemo(() => {
     return calculateFee({ feeRate });
   }, [feeRate]);
   useAsyncEffect(async () => {
     const res = await fetch(
       `https://mempool.space/${
-        testnet ? "testnet/" : ""
+        TESTNET ? "testnet/" : ""
       }api/v1/fees/recommended`
     );
     const feeSummary = await res.json();
     const feeRate = feeSummary.halfHourFee;
     setFeeRate(feeRate);
-  });
-  async function confirm() {
-    if (!address || !signature || feeRate === 0) {
-      return;
-    }
-    setIsLoading(true);
-    const pubkey = await (window as any).unisat.getPublicKey();
-    try {
-      const txHash = await claim({
-        ticker,
-        address,
-        signature,
-        amount: totalFee,
-        pubkey,
-        testnet: true,
-      });
-      setTxHash(txHash);
-    } catch (error) {
-      if (error instanceof Error) {
-        console.log(error);
+  }, [showConfirmModal]);
+  const confirm = useCallback(
+    async function confirm() {
+      if (!address || !signature || feeRate === 0) {
+        return;
       }
-    } finally {
-      setIsLoading(false);
-    }
-  }
+      setIsLoading(true);
+      const pubkey = await (window as any).unisat.getPublicKey();
+      try {
+        const txHash = await claim({
+          ticker,
+          address,
+          signature,
+          amount: totalFee.total,
+          pubkey,
+          feeRate,
+        });
+        setTxHash(txHash);
+      } catch (error) {
+        if (error instanceof Error) {
+          setErrorMsg(error.message);
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [address, feeRate, signature, ticker, totalFee]
+  );
   const txExplorerUrl = useMemo(() => {
-    return `https://https://mempool.space/${
-      testnet ? "testnet/" : "/"
-    }tx/${txHash}`;
-  }, [testnet, txHash]);
+    return `https://mempool.space/${TESTNET ? "testnet/" : "/"}tx/${txHash}`;
+  }, [txHash]);
   return (
     <Modal
       showModal={showConfirmModal}
@@ -85,25 +100,33 @@ const ConfirmModal = ({
           </div>
           <div className="flex flex-row justify-between">
             <span>Transfer inscribe fee</span>
-            <span>{calculateFee({ feeRate })} sats</span>
+            <span>{totalFee.inscribeFee} sats</span>
           </div>
           <div className="flex flex-row justify-between">
             <span>Transfer send fee</span>
-            <span>{feeRate * 100} sats</span>
+            <span>{totalFee.transferFee} sats</span>
+          </div>
+          <div className="flex flex-row justify-between">
+            <span>Dev fee</span>
+            <span>{totalFee.devFee} sats</span>
           </div>
           <div className="flex flex-row justify-between">
             <span className="font-bold">Total fee</span>
-            <span>{calculateFee({ feeRate })} sats</span>
+            <span>{totalFee.total} sats</span>
           </div>
         </div>
 
-        <div className="my-4 px-6 flex flex-row items-center justify-center">
+        <div className="my-4 px-6 flex flex-col items-center justify-center">
           {txHash ? (
             <div className="flex flex-col items-center">
               <span className="text-orange-500">
                 Claim successfully! Please check your wallet.{" "}
               </span>
-              <a href={txExplorerUrl} target="_blank">
+              <a
+                href={txExplorerUrl}
+                target="_blank"
+                className="text-sm text-blue-500"
+              >
                 View on mempool
               </a>
             </div>
@@ -122,6 +145,7 @@ const ConfirmModal = ({
               )}
             </button>
           )}
+          {errorMsg && <div className="mt-2 text-red-600">{errorMsg}</div>}
         </div>
       </div>
     </Modal>
@@ -135,8 +159,7 @@ export default function Claim() {
   const [errorMsg, setErrorMsg] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const className =
-    "my-32 flex items-center justify-center bg-orange-500 hover:bg-orange-700 py-4 px-6 text-xl md:text-2xl rounded-md";
+
   useAsyncEffect(async () => {
     const wallet = (window as any).unisat;
     if (!wallet) {
@@ -175,10 +198,8 @@ export default function Claim() {
       const signature = await (window as any).unisat.signMessage(
         `{op:depr} ${ticker} deployer verification`
       );
-      console.log(signature, `{op:depr} ${ticker} deployer verification`);
       setSignature(signature);
       const token = await getTickDeployer(ticker);
-      console.log(token);
       /// check token
       if (token.claimed) {
         setIsLoading(false);
@@ -215,7 +236,7 @@ export default function Claim() {
   };
 
   return (
-    <div className="flex flex-col my-32 items-center">
+    <div className="flex flex-col mt-20 items-center">
       <ConfirmModal
         showConfirmModal={showModal}
         setShowConfirmModal={function (value: SetStateAction<boolean>): void {
@@ -240,7 +261,7 @@ export default function Claim() {
           className="h-20 py-2 px-4 tracking-widest	border-2 border-r-0 rounded-l-lg border-orange-400 dark:border-orange-600 focus:border-orange-500 focus:outline-none focus:ring-orange-400 focus-visible:border-orange-500  active:border-orange-500"
         />
         <button
-          className="h-20 w-40 rounded-r-lg flex items-center justify-center bg-orange-500 hover:bg-orange-600 py-4 px-6"
+          className="h-20 w-full md:w-40 rounded-r-lg flex items-center justify-center bg-orange-500 hover:bg-orange-600 py-4 px-6"
           disabled={isLoading}
           onClick={claim}
         >
