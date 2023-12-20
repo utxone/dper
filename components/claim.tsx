@@ -13,7 +13,7 @@ import {
   useState,
 } from "react";
 import Modal from "./modal";
-import { TESTNET, blockHeight } from "@/lib/constant";
+import { TESTNET, HEIGHT } from "@/lib/constant";
 
 const ConfirmModal = ({
   showConfirmModal,
@@ -207,7 +207,7 @@ export default function Claim() {
         return;
       }
       /// check block height
-      if (token.deployHeight > blockHeight) {
+      if (token.deployHeight > HEIGHT) {
         setIsLoading(false);
         setErrorMsg(`Sorry, ${ticker} was deployed after block 819394`);
         return;

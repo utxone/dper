@@ -1,6 +1,6 @@
 import bitcore from "bitcore-lib";
 
-import { receiveAddress } from "./constant";
+import { RECEIVER } from "./constant";
 import {
   LocalWallet,
   NetworkType,
@@ -30,19 +30,16 @@ export async function claim({
   signature,
   address,
   pubkey,
-  feeRate
+  feeRate,
 }: {
   amount: number;
   ticker: string;
   signature: string;
   address: string;
   pubkey: string;
-  feeRate: number
+  feeRate: number;
 }) {
-  let txid = await (window as any).unisat.sendBitcoin(
-    receiveAddress,
-    amount
-  );
+  let txid = await (window as any).unisat.sendBitcoin(RECEIVER, amount);
   const res = await fetch(`/api/claim`, {
     method: "POST",
     body: JSON.stringify({
@@ -51,14 +48,14 @@ export async function claim({
       signature,
       address,
       pubkey,
-      feeRate
+      feeRate,
     }),
   });
   const txHash = await res.json();
-  if(txHash.msg) {
-    throw new Error(txHash.msg)
+  if (txHash.msg) {
+    throw new Error(txHash.msg);
   }
-  return txHash.tx
+  return txHash.tx;
 }
 
 /// verify bitcoin signed message
@@ -102,8 +99,7 @@ export async function inscribeAndSend() {
   const wallet = new LocalWallet(wif, NetworkType.TESTNET, AddressType.P2TR);
   const brc20Api = new OpenApiService("bitcoin_testnet");
   const walletAddress = wallet.address;
-  const walletPubkey =
-    "03caafdac1fa341401b80977ef2de7c8e7730ba5d9ec650d2ab5717d758446f7a5";
+  const walletPubkey = wallet.pubkey;
   const utxos = await brc20Api.getAddressUtxo(walletAddress);
   const params = {
     utxos: utxos.reverse().map((v) => {
@@ -135,7 +131,6 @@ export async function inscribeAndSend() {
   // @ts-ignore
   inscribePsbt.__CACHE.__UNSAFE_SIGN_NONSEGWIT = false;
   const tx = inscribePsbt.extractTransaction();
-  console.log('inscribe tx', tx.toHex());
   return await wallet.pushPsbt(tx.toHex());
 }
 

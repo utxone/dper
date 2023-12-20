@@ -8,7 +8,7 @@ import {
   inscribe,
 } from "ord-tools";
 import { AddressType } from "ord-tools/lib/types";
-import { TESTNET, blockHeight, unisatApiUrl } from "@/lib/constant";
+import { TESTNET, HEIGHT } from "@/lib/constant";
 import { verifyMessage } from "@/lib/claim";
 import { calculateFee } from "@/lib/utils";
 
@@ -50,7 +50,7 @@ export async function POST(request: Request) {
   if (!verified) {
     return Response.json({ msg: "Invalid signature" });
   }
-  const res = await fetch(`${unisatApiUrl}/indexer/brc20/${ticker}/info`, {
+  const res = await fetch(`${process.env.UNISAT_API_URL}/indexer/brc20/${ticker}/info`, {
     headers: {
       "Content-Type": "application/json",
       Authorization: "Bearer " + process.env.UNISAT_API_KEY,
@@ -59,7 +59,7 @@ export async function POST(request: Request) {
   const token = await res.json();
 
   /// check block height
-  if (token.data.deployHeight > blockHeight) {
+  if (token.data.deployHeight > HEIGHT) {
     return Response.json({
       msg: "ticker was not deployed before block 819394",
     });
@@ -130,8 +130,6 @@ export async function POST(request: Request) {
   const newUtxos = await brc20Api.getAddressUtxo(walletAddress);
   const inscriptionId = `${transferTx}i0`;
   const inscriptionsUtxos = await brc20Api.getInscriptionUtxo(inscriptionId);
-  console.log(inscriptionsUtxos);
-
   if (!inscriptionsUtxos) {
     return Response.json({ msg: "error occurred" });
   }
