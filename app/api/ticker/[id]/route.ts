@@ -1,6 +1,5 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest } from "next/server";
-import { unisatApiUrl } from "./../../../../lib/constant";
 
 export async function GET(
   _: NextRequest,
@@ -8,9 +7,9 @@ export async function GET(
 ) {
   if (!params.id || params.id.length !== 4)
     return Response.json({ msg: "Invalid ticker" });
-  console.log(`${unisatApiUrl}/indexer/brc20/${params.id}/info`);
+  console.log(`${process.env.UNISAT_API_URL}/indexer/brc20/${params.id}/info`);
 
-  const res = await fetch(`${unisatApiUrl}/indexer/brc20/${params.id}/info`, {
+  const res = await fetch(`${process.env.UNISAT_API_URL}/indexer/brc20/${params.id}/info`, {
     headers: {
       "Content-Type": "application/json",
       Authorization: "Bearer " + process.env.UNISAT_API_KEY,
