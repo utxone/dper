@@ -10,7 +10,6 @@ import {
 } from "ord-tools";
 import { AddressType } from "ord-tools/lib/types";
 import * as bitcoin from "bitcoinjs-lib";
-import { calculateFee } from "./utils";
 /// @ts-ignore
 if (global._bitcore) delete global._bitcore;
 
