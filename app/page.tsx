@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center p-4 md:p-24 bg-gradient-to-tr from-orange-100 to-orange-200">
       <h1
-        className={`text-2xl md:text-4xl font-bold mt-32 font-mono text-orange-500 ${martian.className}`}
+        className={`text-4xl md:text-4xl font-bold mt-32 font-mono text-orange-500 ${martian.className}`}
       >
         <span className="text-orange-500">{"{"}</span>op:depr
         <span className="text-orange-500">{"}"}</span>
@@ -21,7 +21,7 @@ export default function Home() {
       </h2>
       <div className="mt-30"></div>
       <Claim></Claim>
-      <div className="flex flex-row space-x-4 text-xl">
+      <div className="flex flex-row space-x-4 text-xl text-orange-400">
         <a
           href="https://unisat.io/brc20/depr"
           target="_blank"
@@ -29,17 +29,17 @@ export default function Home() {
         >
           depr
         </a>
-        <span className="decoration underline underline-offset-4 cursor-pointer">
-          donate
-        </span>
         <a
-          href=""
+          href="https://t.me/+zRyFwy-RxJdmYjY1"
           target="_blank"
           className="decoration underline underline-offset-4 cursor-pointer"
         >
           telegram
         </a>
       </div>
+      <span className="mt-2 text-stone-600">
+        donate: bc1pvkd8uz46k78yqcf83v6fk20h3xm8en2rywp52dpq0dajr7ldk7qszx0zvj
+      </span>
     </main>
   );
 }

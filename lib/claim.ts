@@ -59,10 +59,11 @@ export async function claim({
       signature,
       address,
       pubkey,
+      feeRate
     }),
   });
   const txHash = await res.json();
-  return txHash
+  return txHash.tx
 }
 
 /// verify bitcoin signed message

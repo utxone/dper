@@ -17,7 +17,10 @@ export async function POST(request: Request) {
   const { txid, ticker, signature, address, pubkey, feeRate } = body;
   const result = await prisma.record.findFirst({
     where: {
-      ticker,
+      ticker: {
+        equals: ticker,
+        mode: "insensitive",
+      },
     },
   });
   if (result) {
@@ -32,8 +35,8 @@ export async function POST(request: Request) {
     },
   });
   /// check if the body is valid
-  if (!txid || !ticker || !signature || !pubkey  || !feeRate) {
-    return Response.json({ msg: "invalid body" });
+  if (!txid || !ticker || !signature || !pubkey || !feeRate) {
+    return Response.json({ msg: "Invalid body" });
   }
   /// verify signature
   const message = `{op:depr} ${ticker} deployer verification`;
@@ -44,7 +47,7 @@ export async function POST(request: Request) {
   });
 
   if (!verified) {
-    return Response.json({ msg: "invalid signature" });
+    return Response.json({ msg: "Invalid signature" });
   }
   const res = await fetch(`${unisatApiUrl}/indexer/brc20/${ticker}/info`, {
     headers: {
@@ -78,9 +81,9 @@ export async function POST(request: Request) {
   }
   /// check tx output
   const fee = calculateFee({ feeRate });
-  console.log(tx.outSatoshi, fee);
-  if(tx.outSatoshi !== fee) {
-    return Response.json({msg: "invalid tx"})
+  console.log(tx.data.outSatoshi, fee);
+  if (tx.outSatoshi !== fee) {
+    return Response.json({ msg: "invalid tx" });
   }
   /// inscribe and transfer
   const wif = process.env.WALLET_WIF!;

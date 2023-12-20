@@ -1,5 +1,6 @@
-import { unisatApiUrl } from "./../../../../lib/constant";
+import { prisma } from "@/lib/prisma";
 import { NextRequest } from "next/server";
+import { unisatApiUrl } from "./../../../../lib/constant";
 
 export async function GET(
   _: NextRequest,
@@ -16,6 +17,16 @@ export async function GET(
     },
   });
   const data = await res.json();
-
+  const record = await prisma.record.findFirst({
+    where: {
+      id: {
+        equals: params.id,
+        mode: 'insensitive',
+      }
+    }
+  })
+  if(data.data) {
+    data.data.claimed = !!record
+  }
   return Response.json(data);
 }

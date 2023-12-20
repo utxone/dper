@@ -110,6 +110,7 @@ const ConfirmModal = ({
           ) : (
             <button
               className="h-16 w-60 text-xl md:text-2xl rounded-lg flex items-center justify-center bg-orange-500 hover:bg-orange-600 py-4 px-6"
+              disabled={isLoading}
               onClick={() => {
                 confirm();
               }}
@@ -177,6 +178,13 @@ export default function Claim() {
       console.log(signature, `{op:depr} ${ticker} deployer verification`);
       setSignature(signature);
       const token = await getTickDeployer(ticker);
+      console.log(token);
+      /// check token
+      if (token.claimed) {
+        setIsLoading(false);
+        setErrorMsg(`Sorry, ${ticker} has been claimed`);
+        return;
+      }
       /// check block height
       if (token.deployHeight > blockHeight) {
         setIsLoading(false);
