@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     take: pageSize,
     where: {
       hash: {
-        not :""
+        not : ""
       }
     },
     orderBy: {
