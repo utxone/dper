@@ -24,6 +24,7 @@ export function calculateFee({ feeRate }: { feeRate: number }) {
   const fileCount = 1;
   const devFee = 2000; // the fee for developer
   const transferSize = 214; // send ord miner fee
+  const firstTransferSize = 154; // gas fee for send balance to inscribe account
 
   const balance = inscriptionBalance * fileCount;
 
@@ -47,7 +48,7 @@ export function calculateFee({ feeRate }: { feeRate: number }) {
         feeRate
     );
   }
-  const inscribeFee = balance + networkSats;
+  const inscribeFee = balance + networkSats + firstTransferSize * feeRate;
   const transferFee = transferSize * feeRate;
   const total = inscribeFee + devFee + transferFee;
   return {
