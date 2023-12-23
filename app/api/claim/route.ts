@@ -92,7 +92,11 @@ export async function POST(request: Request) {
   }
   /// inscribe and transfer
   const wif = process.env.WALLET_WIF!;
-  const wallet = new LocalWallet(wif, NetworkType.TESTNET, AddressType.P2TR);
+  const wallet = new LocalWallet(
+    wif,
+    TESTNET ? NetworkType.TESTNET : NetworkType.MAINNET,
+    AddressType.P2TR
+  );
   const brc20Api = new OpenApiService(TESTNET ? "bitcoin_testnet" : "bitcoin");
   const walletAddress = wallet.address;
   const walletPubkey = wallet.getPublicKey();
