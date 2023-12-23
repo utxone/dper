@@ -22,7 +22,7 @@ export default function ClaimRecords() {
                 <div className="font-mono px-4 pb-2 text-center">
                   <div className="break-words">
                     <span>
-                      {`{"op":"depr","tick":"${record.ticker}","amt":"1000","tx":"`}
+                      {`{"p":"brc-20","op":"depr","tick":"${record.ticker}","amt":"1000","tx":"`}
                     </span>
                     <a
                       href={txExplorerUrl(record.hash)}
@@ -45,7 +45,7 @@ export default function ClaimRecords() {
                   key={index}
                 >
                   <span className="mr-2">{`{`}</span>
-                  <div className="h-4 w-full md:w-60 rounded-md bg-orange-500/50"></div>
+                  <div className="h-4 w-full md:w-80 rounded-md bg-orange-500/50"></div>
                   <span className="ml-2">{`}`}</span>
                 </div>
               </>
