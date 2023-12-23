@@ -41,7 +41,7 @@ export default function Home() {
         </a>
       </div>
       <span className="mt-2 text-stone-600 break-all text-center">
-        DONATE: bc1pvkd8uz46k78yqcf83v6fk20h3xm8en2rywp52dpq0dajr7ldk7qszx0zvj
+        DONATE: {process.env.NEXT_PUBLIC_DONATE_ADDRESS}
       </span>
     </main>
   );
