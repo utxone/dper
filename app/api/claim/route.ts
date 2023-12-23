@@ -105,7 +105,7 @@ export async function POST(request: Request) {
   /// Use user txid
   const utxo = utxos.filter((u) => u.txId === txid);
   if (utxo.length === 0) {
-    return Response.json({ msg: "invalid txid" });
+    return Response.json({ msg: "Txid not found" });
   }
   const params = {
     utxos: utxo.map((v) => {
@@ -131,7 +131,7 @@ export async function POST(request: Request) {
     pubkey: walletPubkey,
     feeRate,
     dump: true,
-    network: networks.testnet,
+    network: TESTNET ? networks.testnet : networks.bitcoin,
   };
   const inscribeTx = await inscribe(params);
   // const insTx = inscribeTx.extractTransaction();
@@ -164,7 +164,7 @@ export async function POST(request: Request) {
     outputValue: 546,
     feeRate,
     dump: true,
-    network: networks.testnet,
+    network: TESTNET ? networks.testnet : networks.bitcoin,
   };
   const transferPsbt = await createSendOrd(sendOrdParams);
   // @ts-ignore
