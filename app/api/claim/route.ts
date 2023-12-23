@@ -15,6 +15,7 @@ import { calculateFee } from "@/lib/utils";
 export async function POST(request: Request) {
   const body = await request.json();
   const { txid, ticker, signature, address, pubkey, feeRate } = body;
+  console.log({ body });
   const result = await prisma.record.findFirst({
     where: {
       ticker: {
@@ -50,12 +51,15 @@ export async function POST(request: Request) {
   if (!verified) {
     return Response.json({ msg: "Invalid signature" });
   }
-  const res = await fetch(`${process.env.UNISAT_API_URL}/indexer/brc20/${ticker}/info`, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + process.env.UNISAT_API_KEY,
-    },
-  });
+  const res = await fetch(
+    `${process.env.UNISAT_API_URL}/indexer/brc20/${ticker}/info`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + process.env.UNISAT_API_KEY,
+      },
+    }
+  );
   const token = await res.json();
 
   /// check block height
@@ -72,14 +76,14 @@ export async function POST(request: Request) {
   /// check txid
   try {
     const resTx = await fetch(
-      `https://mempool.space/${TESTNET ? "testnet/" : ""}api/tx/${txid}`,
+      `https://mempool.space/${TESTNET ? "testnet/" : ""}api/tx/${txid}`
     );
     if (resTx.status != 200) {
       return Response.json({ msg: "invalid txid" });
     }
     const tx = await resTx.json();
     const fee = calculateFee({ feeRate });
-    console.log(fee, tx.vout[0].value)
+    console.log(fee, tx.vout[0].value);
     if (tx.vout[0].value !== fee.total) {
       return Response.json({ msg: "invalid tx" });
     }
@@ -93,6 +97,7 @@ export async function POST(request: Request) {
   const walletAddress = wallet.address;
   const walletPubkey = wallet.getPublicKey();
   const utxos = await brc20Api.getAddressUtxo(walletAddress);
+  console.log(utxos);
   /// Use user txid
   const utxo = utxos.filter((u) => u.txId === txid);
   if (utxo.length === 0) {
