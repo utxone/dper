@@ -21,7 +21,7 @@
     "bitcore-lib": "^10.0.0",
     "dayjs": "^1.11.10",
     "focus-trap-react": "^10.2.3",
-    "framer-motion": "^10.16.16",
+    "framer-motion": "^11.0.0",
     "next": "14.0.4",
     "ord-tools": "^1.0.11",
     "prisma": "^5.7.0",
