@@ -129,7 +129,7 @@ export async function inscribeAndSend() {
   const inscribePsbt = await inscribe(params);
   // @ts-ignore
   inscribePsbt.__CACHE.__UNSAFE_SIGN_NONSEGWIT = false;
-  const tx = inscribePsbt.extractTransaction();
+  const tx = inscribePsbt.psbt.extractTransaction();
   return await wallet.pushPsbt(tx.toHex());
 }
 
