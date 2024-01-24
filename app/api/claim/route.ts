@@ -15,7 +15,6 @@ import { calculateFee } from "@/lib/utils";
 export async function POST(request: Request) {
   const body = await request.json();
   const { txid, ticker, signature, address, pubkey, feeRate } = body;
-  console.log({ body });
   const result = await prisma.record.findFirst({
     where: {
       ticker: {
@@ -100,10 +99,17 @@ export async function POST(request: Request) {
   const brc20Api = new OpenApiService(TESTNET ? "bitcoin_testnet" : "bitcoin");
   const walletAddress = wallet.address;
   const walletPubkey = wallet.getPublicKey();
-  const utxos = await brc20Api.getAddressUtxo(walletAddress);
-  console.log(utxos);
+  console.log(walletAddress);
   /// Use user txid
-  const utxo = utxos.filter((u) => u.txId === txid);
+  let utxo: any[] = [];
+  let j = 0;
+  while (utxo.length === 0 && j < 5) {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    const utxos = await brc20Api.getAddressUtxo(walletAddress);
+    console.log(utxos);
+    utxo = utxos.filter((u) => u.txId === txid);
+    j ++
+  }
   if (utxo.length === 0) {
     return Response.json({ msg: "Txid not found" });
   }
@@ -122,7 +128,7 @@ export async function POST(request: Request) {
     inscription: {
       contentType: "text/plain;charset=utf-8",
       body: Buffer.from(
-        `{"p": "brc-20","op": "transfer","tick": "${ticker}","amt": "1"}`
+        `{"p": "brc-20","op": "transfer","tick": "${ticker}","amt": "1000"}`
       ),
     },
     address: walletAddress,
@@ -135,16 +141,29 @@ export async function POST(request: Request) {
   };
   const inscribeTx = await inscribe(params);
   // const insTx = inscribeTx.extractTransaction();
-  const transferTx = await wallet.pushPsbt(inscribeTx.toHex());
-  await new Promise((resolve) => setTimeout(resolve, 2000));
-  const newUtxos = await brc20Api.getAddressUtxo(walletAddress);
+  const transferTx = await wallet.pushPsbt(inscribeTx.psbt.toHex());
   const inscriptionId = `${transferTx}i0`;
-  const inscriptionsUtxos = await brc20Api.getInscriptionUtxo(inscriptionId);
+  let inscriptionsUtxos
+  let i = 0;
+  while (!inscriptionsUtxos && i < 5) {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    try {
+      inscriptionsUtxos = await brc20Api.getInscriptionUtxo(inscriptionId);
+    } catch (error) {
+      console.log(error);
+    }
+    i ++
+  }
   if (!inscriptionsUtxos) {
-    return Response.json({ msg: "error occurred" });
+    return Response.json({ msg: "Inscription not found" });
+  }
+  const newUtxos = await brc20Api.getAddressUtxo(walletAddress);
+  const input = newUtxos.filter((u: any) => u.txId === inscribeTx.txid);
+  if (utxo.length === 0) {
+    return Response.json({ msg: "Txid not found" });
   }
   const sendOrdParams = {
-    utxos: [...newUtxos, inscriptionsUtxos].map((v) => {
+    utxos: [...input, inscriptionsUtxos].map((v) => {
       return {
         txId: v.txId,
         outputIndex: v.outputIndex,

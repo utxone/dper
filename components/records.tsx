@@ -14,8 +14,8 @@ export default function ClaimRecords() {
 
   return (
     <>
-      <div className="mt-6 w-full">
-        <div className="flex flex-col">
+      <div className="mt-12 w-full">
+        <div className="flex flex-col space-y-4">
           {records &&
             records.map((record) => (
               <>

@@ -3,7 +3,9 @@
         "bitcoinjs",
         "deployers",
         "depr",
+        "Psbt",
         "tailwindcss",
-        "txid"
+        "txid",
+        "Utxos"
     ]
 }

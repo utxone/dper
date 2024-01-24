@@ -15,7 +15,7 @@ export function LoadMore({
   if (!hasMore)
     return (
       <div className="w-full text-center text-md opacity-70 dark:text-white">
-        No more data
+        No more records
       </div>
     );
   if (isLoading)

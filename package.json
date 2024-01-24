@@ -15,7 +15,6 @@
   "dependencies": {
     "@bitcoinerlab/secp256k1": "^1.0.5",
     "@prisma/client": "^5.7.0",
-    "@unisat/ord-utils": "^0.4.0",
     "ahooks": "^3.7.8",
     "bitcoinjs-lib": "^6.1.5",
     "bitcore-lib": "^10.0.0",
@@ -23,7 +22,7 @@
     "focus-trap-react": "^10.2.3",
     "framer-motion": "^10.16.16",
     "next": "14.0.4",
-    "ord-tools": "^1.0.11",
+    "ord-tools": "^1.0.15",
     "prisma": "^5.7.0",
     "query-string": "^8.1.0",
     "react": "^18",

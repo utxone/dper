@@ -15,7 +15,7 @@ export default function Home() {
       <h2 className="text-4xl md:text-6xl mt-20 text-center font-[500] text-neutral-800">
         Airdrop for brc-20 deployers
       </h2>
-      <h2 className="text-xl md:text-3xl text-center mt-10 font-[500] text-neutral-800">
+      <h2 className="text-xl max-w-[900px] md:text-3xl text-center mt-10 font-[500] text-neutral-800">
         If you have deployed brc-20 ticker before block{" "}
         <span className="font-mono decoration">[819394]</span> , you can claim
         1,000 depr, all 20,000,000 depr is available to claim.

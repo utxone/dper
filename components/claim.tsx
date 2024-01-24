@@ -120,7 +120,7 @@ const ConfirmModal = ({
           {txHash ? (
             <div className="flex flex-col items-center">
               <span className="text-orange-500">
-                Claim successfully! Please check your wallet.{" "}
+                Claim successfully! Please check your wallet shortly.{" "}
               </span>
               <a
                 href={txExplorerUrl}
