@@ -26,7 +26,7 @@ const ConfirmModal = ({
   setShowConfirmModal: Dispatch<SetStateAction<boolean>>;
   ticker: string;
   signature: string | undefined;
-  address: string | undefined;
+  address: string;
 }) => {
   const [errorMsg, setErrorMsg] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -40,7 +40,7 @@ const ConfirmModal = ({
     }
   }, [showConfirmModal]);
   const totalFee = useMemo(() => {
-    return calculateFee({ feeRate });
+    return calculateFee({ feeRate, address });
   }, [feeRate]);
   useAsyncEffect(async () => {
     const res = await fetch(
@@ -237,6 +237,8 @@ export default function Claim() {
 
   return (
     <div className="flex flex-col mt-20 items-center">
+    {
+      account &&
       <ConfirmModal
         showConfirmModal={showModal}
         setShowConfirmModal={function (value: SetStateAction<boolean>): void {
@@ -246,6 +248,7 @@ export default function Claim() {
         signature={signature}
         address={account}
       />
+    }
       <div className="flex flex-row items-center text-xl md:text-2xl">
         <input
           type="text"

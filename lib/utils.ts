@@ -10,46 +10,39 @@ export function compactAddress(address: string) {
   return address.slice(0, 6) + "..." + address.slice(-4);
 }
 
-export function inscriptionContent(ticker: string, amt: string) {
-  return Buffer.from(
-    `{"p":"brc-20","op":"transfer","tick":"${ticker}","amt":"${amt}"}`,
-    "utf8"
-  );
+function getAddressOutputSize(address: string) {
+  // P2TR address
+  if (address.startsWith("bc1p") || address.startsWith("tb1p")) {
+    return 43;
+  }
+  // P2WPKH address
+  if (address.startsWith("bc1q") || address.startsWith("tb1q")) {
+    return 31;
+  }
+  // P2SH address
+  if (address.startsWith("2") || address.startsWith("3")) {
+    return 32;
+  }
+  // P2PKH
+  return 34;
 }
 
-export function calculateFee({ feeRate }: { feeRate: number }) {
-  const fileSize = inscriptionContent("bool", "1000").length;
+export function calculateFee({
+  feeRate,
+  address,
+}: {
+  feeRate: number;
+  address: string;
+}) {
+  const outputSize = getAddressOutputSize(address);
   const inscriptionBalance = 546; // the balance in each inscription
-  const contentTypeSize = 100; // the size of contentType
-  const fileCount = 1;
   const devFee = 2000; // the fee for developer
-  const transferSize = 214; // send ord miner fee
-  const firstTransferSize = 154; // gas fee for send balance to inscribe account
+  const transferSize = 57.5 * 2 + 43 + outputSize + 10.5; // send ord miner fee
+  const firstTransferSize = 154 * feeRate; // gas fee for send balance to inscribe account
 
-  const balance = inscriptionBalance * fileCount;
-
-  const addrSize = 34 + 1;
-
-  const baseSize = 44;
-  let networkSats = Math.ceil(
-    ((fileSize + contentTypeSize) / 4 + (baseSize + 8 + addrSize + 8 + 23)) *
-      feeRate
-  );
-  if (fileCount > 1) {
-    networkSats = Math.ceil(
-      ((fileSize + contentTypeSize) / 4 +
-        (baseSize +
-          8 +
-          addrSize +
-          (35 + 8) * (fileCount - 1) +
-          8 +
-          23 +
-          (baseSize + 8 + addrSize + 0.5) * (fileCount - 1))) *
-        feeRate
-    );
-  }
-  const inscribeFee = balance + networkSats + firstTransferSize * feeRate;
-  const transferFee = transferSize * feeRate;
+  const networkSats = Math.ceil(152.5 * feeRate);
+  const inscribeFee = inscriptionBalance + networkSats + firstTransferSize;
+  const transferFee = Math.ceil(transferSize * feeRate);
   const total = inscribeFee + devFee + transferFee;
   return {
     inscribeFee,

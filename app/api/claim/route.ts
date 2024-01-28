@@ -81,7 +81,7 @@ export async function POST(request: Request) {
       return Response.json({ msg: "invalid txid" });
     }
     const tx = await resTx.json();
-    const fee = calculateFee({ feeRate });
+    const fee = calculateFee({ feeRate, address });
     console.log(fee, tx.vout[0].value);
     if (tx.vout[0].value !== fee.total) {
       return Response.json({ msg: "invalid tx" });
