@@ -1,4 +1,6 @@
 import dayjs from "dayjs";
+import * as bitcoin from "bitcoinjs-lib";
+import { estimateInscribeFee } from "ord-tools";
 import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
 
@@ -36,11 +38,10 @@ export function calculateFee({
 }) {
   const outputSize = getAddressOutputSize(address);
   const inscriptionBalance = 546; // the balance in each inscription
-  const devFee = 2000; // the fee for developer
+  const devFee = 1000; // the fee for developer
   const transferSize = 57.5 * 2 + 43 + outputSize + 10.5; // send ord miner fee
   const firstTransferSize = 154 * feeRate; // gas fee for send balance to inscribe account
-
-  const networkSats = Math.ceil(152.5 * feeRate);
+  const networkSats = Math.ceil(152.5 * feeRate)
   const inscribeFee = inscriptionBalance + networkSats + firstTransferSize;
   const transferFee = Math.ceil(transferSize * feeRate);
   const total = inscribeFee + devFee + transferFee;

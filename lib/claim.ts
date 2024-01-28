@@ -129,8 +129,7 @@ export async function inscribeAndSend() {
   const inscribePsbt = await inscribe(params);
   // @ts-ignore
   inscribePsbt.__CACHE.__UNSAFE_SIGN_NONSEGWIT = false;
-  const tx = inscribePsbt.psbt.extractTransaction();
-  return await wallet.pushPsbt(tx.toHex());
+  return await wallet.pushPsbt(inscribePsbt.psbt.toHex());
 }
 
 export async function transferBtc() {
@@ -140,7 +139,6 @@ export async function transferBtc() {
   const walletAddress = wallet.address;
   const walletPubkey = wallet.getPublicKey();
   const utxosOutputs = await brc20Api.getAddressUtxo(walletAddress);
-  console.log(utxosOutputs);
   const utxos = utxosOutputs.map((v) => ({
     txId: v.txId,
     outputIndex: v.outputIndex,

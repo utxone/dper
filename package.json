@@ -22,7 +22,7 @@
     "focus-trap-react": "^10.2.3",
     "framer-motion": "^10.16.16",
     "next": "14.0.4",
-    "ord-tools": "^1.0.15",
+    "ord-tools": "^1.0.25",
     "prisma": "^5.7.0",
     "query-string": "^8.1.0",
     "react": "^18",

@@ -33,8 +33,8 @@ dependencies:
     specifier: 14.0.4
     version: 14.0.4(react-dom@18.2.0)(react@18.2.0)
   ord-tools:
-    specifier: ^1.0.15
-    version: 1.0.15
+    specifier: ^1.0.25
+    version: 1.0.25
   prisma:
     specifier: ^5.7.0
     version: 5.7.0
@@ -2883,8 +2883,8 @@ packages:
       type-check: 0.4.0
     dev: true
 
-  /ord-tools@1.0.15:
-    resolution: {integrity: sha512-tisUgukqoy8NIJkGDhUXZKnBpV91ZveoHF2G2xYjpzhaRDDkfGgCWJQ9fs3EVr7jgo/BccWjZwD7WKhhvttrqw==}
+  /ord-tools@1.0.25:
+    resolution: {integrity: sha512-llrVAlZS/df2qyQCPI94YowOT2bbs3FkK2c8UEKdhPVP3z6H7761pC5BwDIu4kdQbbCwJmlZYg4DgIyqbAP/QQ==}
     engines: {node: '>=14.0.0'}
     dependencies:
       '@bitcoinerlab/secp256k1': 1.0.5

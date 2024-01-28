@@ -11,6 +11,9 @@ export default function ClaimRecords() {
   const txExplorerUrl = (txHash: string) => {
     return `https://mempool.space/${TESTNET ? "testnet/" : "/"}tx/${txHash}`;
   };
+  const txOrdUrl = (ticker: string) => {
+    return `https://${TESTNET ? "testnet." : ""}unisat.io/brc20/${ticker}`;
+  };
 
   return (
     <>
@@ -18,37 +21,41 @@ export default function ClaimRecords() {
         <div className="flex flex-col space-y-4">
           {records &&
             records.map((record) => (
-              <>
-                <div className="font-mono px-4 pb-2 text-center">
-                  <div className="break-words">
-                    <span>
-                      {`{"p":"brc-20","op":"depr","tick":"${record.ticker}","amt":"1000","tx":"`}
-                    </span>
-                    <a
-                      href={txExplorerUrl(record.hash)}
-                      target="_blank"
-                      className="text-orange-600"
-                    >
-                      {compactAddress(record.hash)}
-                    </a>
-                    <span>{`"}`}</span>
-                  </div>
-                  {/* <span className="mt-4 text-sm text-stone-600">{dateFromNow(record.create_at)}</span> */}
+              <div className="font-mono px-4 pb-2 text-center" key={record.id}>
+                <div className="break-words">
+                  <span>
+                    {`{"p":"brc-20","op":"depr","tick":"`}
+                  <a
+                    href={txOrdUrl(record.ticker)}
+                    target="_blank"
+                    className="text-orange-600"
+                  >
+                    {record.ticker}
+                  </a>
+                  {`","amt":"1000","tx":"`}
+                  </span>
+                  <a
+                    href={txExplorerUrl(record.hash)}
+                    target="_blank"
+                    className="text-orange-600"
+                  >
+                    {compactAddress(record.hash)}
+                  </a>
+                  <span>{`"}`}</span>
                 </div>
-              </>
+                {/* <span className="mt-4 text-sm text-stone-600">{dateFromNow(record.create_at)}</span> */}
+              </div>
             ))}
           {isLoading &&
             ["✨", "✨"].map((_, index) => (
-              <>
-                <div
-                  className="font-mono flex flex-row animate-pulse items-center justify-center"
-                  key={index}
-                >
-                  <span className="mr-2">{`{`}</span>
-                  <div className="h-4 w-full md:w-80 rounded-md bg-orange-500/50"></div>
-                  <span className="ml-2">{`}`}</span>
-                </div>
-              </>
+              <div
+                className="font-mono flex flex-row animate-pulse items-center justify-center"
+                key={index}
+              >
+                <span className="mr-2">{`{`}</span>
+                <div className="h-4 w-full md:w-[560px] rounded-md bg-orange-500/50"></div>
+                <span className="ml-2">{`}`}</span>
+              </div>
             ))}
         </div>
         {records.length > 0 && (

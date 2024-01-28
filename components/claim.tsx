@@ -1,9 +1,9 @@
 "use client";
-
 import { claim, getTickDeployer } from "@/lib/claim";
 import { calculateFee, compactAddress } from "@/lib/utils";
 import { useAsyncEffect } from "ahooks";
 import Confetti from "./confetti";
+import EyeIcon from "./eye-icon";
 import {
   Dispatch,
   SetStateAction,
@@ -125,9 +125,12 @@ const ConfirmModal = ({
               <a
                 href={txExplorerUrl}
                 target="_blank"
-                className="text-sm text-blue-500"
+                className="text-sm text-orange-500 flex flex-row items-center space-x-1"
               >
-                View on mempool
+                <EyeIcon />
+                <span className="underline">
+                  View on Mempool
+                </span>
               </a>
             </div>
           ) : (
@@ -254,7 +257,7 @@ export default function Claim() {
           type="text"
           value={ticker}
           onChange={(e) => setTicker(e.target.value)}
-          placeholder="Ticker you deployed"
+          placeholder="ordi"
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               e.preventDefault();

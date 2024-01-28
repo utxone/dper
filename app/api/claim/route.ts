@@ -99,14 +99,12 @@ export async function POST(request: Request) {
   const brc20Api = new OpenApiService(TESTNET ? "bitcoin_testnet" : "bitcoin");
   const walletAddress = wallet.address;
   const walletPubkey = wallet.getPublicKey();
-  console.log(walletAddress);
   /// Use user txid
   let utxo: any[] = [];
   let j = 0;
   while (utxo.length === 0 && j < 5) {
     await new Promise((resolve) => setTimeout(resolve, 2000));
     const utxos = await brc20Api.getAddressUtxo(walletAddress);
-    console.log(utxos);
     utxo = utxos.filter((u) => u.txId === txid);
     j ++
   }
@@ -122,13 +120,13 @@ export async function POST(request: Request) {
         scriptPk: v.scriptPk,
         addressType: v.addressType,
         address: walletAddress,
-        ords: v.inscriptions ?? [],
+        ords: [],
       };
     }),
     inscription: {
       contentType: "text/plain;charset=utf-8",
       body: Buffer.from(
-        `{"p": "brc-20","op": "transfer","tick": "${ticker}","amt": "1000"}`
+        `{"p":"brc-20","op":"transfer","tick":"depr","amt":"1000"}`
       ),
     },
     address: walletAddress,
@@ -140,7 +138,6 @@ export async function POST(request: Request) {
     network: TESTNET ? networks.testnet : networks.bitcoin,
   };
   const inscribeTx = await inscribe(params);
-  // const insTx = inscribeTx.extractTransaction();
   const transferTx = await wallet.pushPsbt(inscribeTx.psbt.toHex());
   const inscriptionId = `${transferTx}i0`;
   let inscriptionsUtxos
