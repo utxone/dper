@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { lora, zilla } from "@/lib/fonts";
+import { kantumruy } from "@/lib/fonts";
 
 export const metadata: Metadata = {
   title: "{ op: depr }",
@@ -14,7 +14,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={zilla.className}>
+      <body className={kantumruy.className}>
         {children}
       </body>
     </html>

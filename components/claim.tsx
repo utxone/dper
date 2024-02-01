@@ -125,10 +125,10 @@ const ConfirmModal = ({
               <a
                 href={txExplorerUrl}
                 target="_blank"
-                className="text-sm text-orange-500 flex flex-row items-center space-x-1"
+                className="text-sm text-[#1bd8f4] flex flex-row items-center space-x-1"
               >
                 <EyeIcon />
-                <span className="underline">
+                <span className="underline ">
                   View on Mempool
                 </span>
               </a>
