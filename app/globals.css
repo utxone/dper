@@ -32,7 +32,6 @@ body:after {
   position: absolute;
   z-index: -1;
   background: radial-gradient(rgba(249,115,22,.6) 10%, transparent 60%);
-
 }
 
 .loader {
