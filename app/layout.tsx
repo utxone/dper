@@ -4,7 +4,7 @@ import { kantumruy } from "@/lib/fonts";
 
 export const metadata: Metadata = {
   title: "{ op: depr }",
-  description: "Airdrop for deployers",
+  description: "Airdrop for brc-20 deployers",
 };
 
 export default function RootLayout({

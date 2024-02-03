@@ -1,42 +1,48 @@
 import { Dispatch, SetStateAction } from "react";
+import ArrowIcon from "./arrow-icon";
 
 interface LoadMoreProps {
-  hasMore: boolean;
+  hasNext: boolean;
   isLoading: boolean;
+  hasPre: boolean;
   empty: boolean;
   setPage: Dispatch<SetStateAction<number>>;
 }
 export function LoadMore({
-  hasMore,
+  hasNext,
+  hasPre,
   isLoading,
   setPage,
   empty,
 }: LoadMoreProps) {
-  if (!hasMore)
-    return (
-      <div className="w-full text-center text-md opacity-70 dark:text-white">
-        No more records
-      </div>
-    );
   if (isLoading)
     return (
-      <div className="dot-loader w-full text-center text-md opacity-70 dark:text-white">
-      </div>
-    );
-  if (empty)
-    return (
-      <div className="dot-loader w-full text-center text-md opacity-70 dark:text-white">
-        No data
+      <div className="flex flex-row justify-center space-x-6">
+        <span className="spinner-loader"></span>
       </div>
     );
   return (
-    <div
-      className="w-full cursor-pointer text-center text-lg opacity-70 dark:text-white"
-      onClick={() => {
-        if (hasMore) setPage((page) => page + 1);
-      }}
-    >
-      Load more
+    <div className="flex flex-row justify-center space-x-6">
+      {hasPre && (
+        <div
+          className="cursor-pointer hover:text-orange-500"
+          onClick={() => {
+            setPage((page) => page - 1);
+          }}
+        >
+          {"<-"}
+        </div>
+      )}
+      {hasNext && (
+        <div
+          className="cursor-pointer hover:text-orange-500"
+          onClick={() => {
+            setPage((page) => page + 1);
+          }}
+        >
+          {"->"}
+        </div>
+      )}
     </div>
   );
 }

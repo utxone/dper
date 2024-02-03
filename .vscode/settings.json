@@ -3,9 +3,11 @@
         "bitcoinjs",
         "deployers",
         "depr",
+        "dper",
         "Psbt",
         "tailwindcss",
         "txid",
+        "unisat",
         "Utxos"
     ]
 }

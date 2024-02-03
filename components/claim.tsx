@@ -41,7 +41,7 @@ const ConfirmModal = ({
   }, [showConfirmModal]);
   const totalFee = useMemo(() => {
     return calculateFee({ feeRate, address });
-  }, [feeRate]);
+  }, [address, feeRate]);
   useAsyncEffect(async () => {
     const res = await fetch(
       `https://mempool.space/${
@@ -128,9 +128,7 @@ const ConfirmModal = ({
                 className="text-sm text-[#1bd8f4] flex flex-row items-center space-x-1"
               >
                 <EyeIcon />
-                <span className="underline ">
-                  View on Mempool
-                </span>
+                <span className="underline ">View on Mempool</span>
               </a>
             </div>
           ) : (
@@ -226,6 +224,7 @@ export default function Claim() {
         return;
       }
       setIsLoading(false);
+      setTicker(undefined)
       /// open confirm modal
       setShowModal(true);
     } catch (error) {
@@ -239,19 +238,18 @@ export default function Claim() {
   };
 
   return (
-    <div className="flex flex-col mt-20 items-center">
-    {
-      account &&
-      <ConfirmModal
-        showConfirmModal={showModal}
-        setShowConfirmModal={function (value: SetStateAction<boolean>): void {
-          setShowModal(value);
-        }}
-        ticker={ticker}
-        signature={signature}
-        address={account}
-      />
-    }
+    <div className="flex flex-col mt-10 items-center">
+      {account && (
+        <ConfirmModal
+          showConfirmModal={showModal}
+          setShowConfirmModal={function (value: SetStateAction<boolean>): void {
+            setShowModal(value);
+          }}
+          ticker={ticker}
+          signature={signature}
+          address={account}
+        />
+      )}
       <div className="flex flex-row items-center text-xl md:text-2xl">
         <input
           type="text"
@@ -264,10 +262,10 @@ export default function Claim() {
               claim();
             }
           }}
-          className="h-20 py-2 px-4 tracking-widest	border-2 border-r-0 rounded-l-lg border-orange-400 dark:border-orange-600 focus:border-orange-500 focus:outline-none focus:ring-orange-400 focus-visible:border-orange-500  active:border-orange-500"
+          className="text-white h-20 py-2 px-4 w-full md:w-[400px] tracking-widest border border-r-0 rounded-l-md bg-black border-love-400 focus:border-love-500 focus:outline-none focus:ring-orange-400 focus-visible:border-love-500  active:border-love-500"
         />
         <button
-          className="h-20 w-full md:w-40 rounded-r-lg flex items-center justify-center bg-orange-500 hover:bg-orange-600 py-4 px-6"
+          className="h-20 w-40 rounded-r-md flex items-center justify-center bg-love-500 hover:bg-love-600 py-4 px-6"
           disabled={isLoading}
           onClick={claim}
         >

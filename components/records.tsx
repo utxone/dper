@@ -1,12 +1,13 @@
 "use client";
 import { usePagination } from "@/lib/use-pagination";
 import { Record } from "@prisma/client";
+import { useState } from "react";
 import { LoadMore } from "./load-more";
 import { compactAddress, dateFromNow } from "@/lib/utils";
 import { TESTNET } from "@/lib/constant";
 
 export default function ClaimRecords() {
-  const { records, setPage, isLoading, hasMore } =
+  const { records, setPage, isLoading, hasNext, hasPre, hasMore } =
     usePagination<Record>("/api/records");
   const txExplorerUrl = (txHash: string) => {
     return `https://mempool.space/${TESTNET ? "testnet/" : "/"}tx/${txHash}`;
@@ -14,10 +15,9 @@ export default function ClaimRecords() {
   const txOrdUrl = (ticker: string) => {
     return `https://${TESTNET ? "testnet." : ""}unisat.io/brc20/${ticker}`;
   };
-
   return (
     <>
-      <div className="mt-12 w-full">
+      <div className="w-full md:w-[800px] min-h-[400px] text-white">
         <div className="flex flex-col space-y-4">
           {records &&
             records.map((record) => (
@@ -25,14 +25,14 @@ export default function ClaimRecords() {
                 <div className="break-words">
                   <span>
                     {`{"p":"brc-20","op":"depr","tick":"`}
-                  <a
-                    href={txOrdUrl(record.ticker)}
-                    target="_blank"
-                    className="text-orange-600"
-                  >
-                    {record.ticker}
-                  </a>
-                  {`","amt":"1000","tx":"`}
+                    <a
+                      href={txOrdUrl(record.ticker)}
+                      target="_blank"
+                      className="text-orange-600"
+                    >
+                      {record.ticker}
+                    </a>
+                    {`","amt":"1000","tx":"`}
                   </span>
                   <a
                     href={txExplorerUrl(record.hash)}
@@ -46,7 +46,7 @@ export default function ClaimRecords() {
                 {/* <span className="mt-4 text-sm text-stone-600">{dateFromNow(record.create_at)}</span> */}
               </div>
             ))}
-          {isLoading &&
+          {(isLoading && !hasPre) &&
             ["✨", "✨"].map((_, index) => (
               <div
                 className="font-mono flex flex-row animate-pulse items-center justify-center"
@@ -61,7 +61,8 @@ export default function ClaimRecords() {
         {records.length > 0 && (
           <LoadMore
             isLoading={isLoading}
-            hasMore={hasMore}
+            hasNext={hasNext && hasMore}
+            hasPre={hasPre}
             setPage={setPage}
             empty={records.length === 0}
           />

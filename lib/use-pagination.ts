@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import useSwr from "swr";
 import queryString from "query-string";
 
@@ -30,14 +30,16 @@ export function usePagination<T extends { id: string }>(path: string) {
   >();
   const [records, setRecords] = useState<T[]>([]);
   const [hasMore, setHasMore] = useState(true);
-
+  
+  const hasPre = useMemo(() => page > 1, [page]);
+  const hasNext = useMemo(() => records.length === 5, [records.length]);
   const { data, isLoading, error } = useSwr<T[]>(
     {
       path,
       page,
       options,
     },
-    (key: any) => getData<T>(key.path, key.page, 20, key.options)
+    (key: any) => getData<T>(key.path, key.page, 5, key.options)
   );
 
   useEffect(() => {
@@ -50,15 +52,9 @@ export function usePagination<T extends { id: string }>(path: string) {
   useEffect(() => {
     if (!data) return;
     if (data.length > 0) {
-      setRecords((records) => {
-        data.forEach((item) => {
-          if (!records.find((record) => item.id === record.id)) {
-            records = [...records, item];
-          }
-        });
-        return records;
-      });
+      setRecords(data);
     } else {
+      setPage(page-1)
       setHasMore(false);
     }
   }, [data]);
@@ -66,7 +62,9 @@ export function usePagination<T extends { id: string }>(path: string) {
   return {
     setPage,
     records,
+    hasNext,
     hasMore,
+    hasPre,
     isLoading,
     setOptions,
     error,
