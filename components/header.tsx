@@ -7,7 +7,7 @@ export default function Header() {
   const walletContext = useContext(Wallet);
   const address = walletContext.state.address;
   return (
-    <div className="fixed top-0 p-8 w-full flex flex-row justify-between text-stone-300">
+    <div className="fixed top-0 p-4 md:p-8 w-full flex flex-row justify-between text-stone-300">
       <svg
         className="w-8 md:w-12 h-8 md:h-12"
         viewBox="0 0 350 350"
