@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "{op:depr}",
   description: "Airdrop for brc-20 deployers",
   manifest: "/manifest.json",
+  metadataBase: new URL('https://depr.xyz'),
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",

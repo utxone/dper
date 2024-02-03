@@ -49,7 +49,7 @@ export default function Header() {
         />
       </svg>
       {address && (
-        <span className=" text-stone-300 text-xl">{compactAddress(address)}</span>
+        <span className=" text-stone-300 text-xl font-mono">{compactAddress(address)}</span>
       )}
     </div>
   );
