@@ -24,14 +24,14 @@ body:after {
 
 .home:before {
   content: "";
-  width: 100vw;
-  height: 60vw;
-  bottom: -50vw;
+  width: max(1000px, 100vw);
+  height: 500px;
+  top: -350px;
   left: auto;
   right: auto;
   position: absolute;
   z-index: -1;
-  background: radial-gradient(rgba(249,115,22,1) 10%, transparent 70%);
+  background: radial-gradient(rgba(249,115,22,.6) 10%, transparent 60%);
 
 }
 
