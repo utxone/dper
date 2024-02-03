@@ -9,8 +9,7 @@ export default function Header() {
   return (
     <div className="fixed top-0 p-8 w-full flex flex-row justify-between text-stone-300">
       <svg
-        width="50"
-        height="50"
+        className="w-8 md:w-12 h-8 md:h-12"
         viewBox="0 0 350 350"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
