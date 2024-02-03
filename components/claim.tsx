@@ -2,36 +2,105 @@
 import { claim, getTickDeployer } from "@/lib/claim";
 import { calculateFee, compactAddress } from "@/lib/utils";
 import { useAsyncEffect } from "ahooks";
+import Image from "next/image";
 import Confetti from "./confetti";
 import EyeIcon from "./eye-icon";
 import {
   Dispatch,
   SetStateAction,
   useCallback,
+  useContext,
   useEffect,
   useMemo,
   useState,
 } from "react";
 import Modal from "./modal";
 import { TESTNET, HEIGHT } from "@/lib/constant";
+import { Wallet } from "@/lib/use-wallet";
+
+const WalletConnectModal = ({
+  showConnectModal,
+  setShowConnectModal,
+}: {
+  showConnectModal: boolean;
+  setShowConnectModal: Dispatch<SetStateAction<boolean>>;
+}) => {
+  const walletContext = useContext(Wallet);
+  const connect = useCallback(async () => {
+    const wallet = (window as any).unisat;
+    if (!wallet) {
+      return;
+    }
+    const accounts = await wallet.getAccounts();
+    const network = await wallet.getNetwork();
+    if (accounts && accounts.length > 0) {
+      walletContext.dispatch!({
+        type: "connect",
+        payload: {
+          address: accounts[0],
+          network,
+          wallet,
+        },
+      });
+      return;
+    }
+  }, [walletContext.dispatch]);
+  return (
+    <Modal
+      showModal={showConnectModal}
+      setShowModal={setShowConnectModal}
+      clickToClose={true}
+      key="wallet-connect-modal"
+    >
+      <div className="p-4 py-8 w-full grid grid-cols-2 overflow-hidden bg-love-200 md:max-w-lg md:rounded-md md:shadow-xl">
+        <button
+          className="p-4 flex rounded-md flex-row space-x-2 h-full w-full hover:bg-love-300"
+          onClick={connect}
+        >
+          <Image
+            src="/logo_unisat.png"
+            unoptimized
+            height="30"
+            width="30"
+            alt="unisat"
+          ></Image>
+          <span className="text-2xl font-weight">Unisat</span>
+        </button>
+        <button
+          className="cursor-not-allowed p-4 flex rounded-md flex-row space-x-2 h-full w-full"
+          disabled
+        >
+          <Image
+            src="/logo_xverse.png"
+            unoptimized
+            height="30"
+            width="30"
+            alt="unisat"
+          ></Image>
+          <span className="text-2xl font-weight">Xverse</span>
+        </button>
+      </div>
+    </Modal>
+  );
+};
 
 const ConfirmModal = ({
   showConfirmModal,
   setShowConfirmModal,
   ticker,
   signature,
-  address,
 }: {
   showConfirmModal: boolean;
   setShowConfirmModal: Dispatch<SetStateAction<boolean>>;
   ticker: string;
   signature: string | undefined;
-  address: string;
 }) => {
   const [errorMsg, setErrorMsg] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [feeRate, setFeeRate] = useState(0);
   const [txHash, setTxHash] = useState("");
+  const walletContext = useContext(Wallet);
+  const address = walletContext.state.address;
   useEffect(() => {
     if (!showConfirmModal) {
       setErrorMsg("");
@@ -40,6 +109,14 @@ const ConfirmModal = ({
     }
   }, [showConfirmModal]);
   const totalFee = useMemo(() => {
+    if (!address) {
+      return {
+        inscribeFee: 0,
+        transferFee: 0,
+        devFee: 0,
+        total: 0,
+      }
+    }
     return calculateFee({ feeRate, address });
   }, [address, feeRate]);
   useAsyncEffect(async () => {
@@ -87,9 +164,10 @@ const ConfirmModal = ({
       showModal={showConfirmModal}
       setShowModal={setShowConfirmModal}
       clickToClose={true}
+      key="confirm-modal"
     >
       <Confetti />
-      <div className="p-4 w-full overflow-hidden bg-white dark:bg-stone-900 md:max-w-lg md:rounded-md md:shadow-xl">
+      <div className="p-4 w-full overflow-hidden bg-love-200 md:max-w-lg md:rounded-md md:shadow-xl">
         <div className="text-orange-400 px-6 pt-4 text-2xl font-semibold text-center">
           {`Dear ${ticker} deployer, thanks for your contribution!`}
         </div>
@@ -154,44 +232,29 @@ const ConfirmModal = ({
 };
 
 export default function Claim() {
-  const [account, setAccount] = useState();
   const [signature, setSignature] = useState();
   const [ticker, setTicker] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
-
-  useAsyncEffect(async () => {
-    const wallet = (window as any).unisat;
-    if (!wallet) {
-      return;
-    }
-    const accounts = await wallet.getAccounts();
-    if (accounts && accounts.length > 0) {
-      setAccount(accounts[0]);
-      return;
-    }
-  }, []);
+  const [showConnectModal, setShowConnectModal] = useState(false);
+  const walletContext = useContext(Wallet);
+  const account = walletContext.state.address;
 
   const claim = async () => {
     setErrorMsg("");
     setIsLoading(true);
-    if (!ticker || ticker.length !== 4) {
+    if (!ticker || Buffer.from(ticker, 'utf8').length !== 4) {
       setErrorMsg("This is not a valid brc-20 ticker");
       setIsLoading(false);
       return;
     }
     /// check account, if not exist, connect wallet first
-    const wallet = (window as any).unisat;
-    if (!wallet) {
-      setErrorMsg("Unisat wallet not installed");
+    const account = walletContext.state.address;
+    if (!account) {
+      setShowConnectModal(true);
       setIsLoading(false);
       return;
-    }
-    const accounts = await wallet.getAccounts();
-    const pubkey = await wallet.getPublicKey();
-    if (accounts && accounts.length > 0) {
-      setAccount(() => accounts[0]);
     }
     /// get user signature
     /// verify ticker and signature
@@ -224,7 +287,6 @@ export default function Claim() {
         return;
       }
       setIsLoading(false);
-      setTicker('')
       /// open confirm modal
       setShowModal(true);
     } catch (error) {
@@ -239,7 +301,7 @@ export default function Claim() {
 
   return (
     <div className="flex flex-col mt-10 items-center">
-      {account && (
+      {account ? (
         <ConfirmModal
           showConfirmModal={showModal}
           setShowConfirmModal={function (value: SetStateAction<boolean>): void {
@@ -247,7 +309,13 @@ export default function Claim() {
           }}
           ticker={ticker}
           signature={signature}
-          address={account}
+        />
+      ) : (
+        <WalletConnectModal
+          showConnectModal={showConnectModal}
+          setShowConnectModal={function (value: SetStateAction<boolean>): void {
+            setShowConnectModal(value);
+          }}
         />
       )}
       <div className="flex flex-row items-center text-xl md:text-2xl">
@@ -272,7 +340,11 @@ export default function Claim() {
           {isLoading ? <span className="loader"></span> : <span>CLAIM</span>}
         </button>
       </div>
-      {errorMsg && <div className="mt-2 text-red-600">{errorMsg}</div>}
+      {errorMsg ? (
+        <div className="mt-2 text-red-600">{errorMsg}</div>
+      ) : (
+        <div className="mt-2 text-transparent">Air</div>
+      )}
     </div>
   );
 }

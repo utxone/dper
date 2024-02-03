@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { kantumruy } from "@/lib/fonts";
-import Header from '@/components/header'
+import Header from "@/components/header";
+import { WalletConfig } from "@/lib/use-wallet";
 
 export const metadata: Metadata = {
   title: "{ op: depr }",
@@ -16,8 +17,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={kantumruy.className}>
-        <Header></Header>
-        {children}
+        <WalletConfig>
+          <Header></Header>
+          {children}
+        </WalletConfig>
       </body>
     </html>
   );

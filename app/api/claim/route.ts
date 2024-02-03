@@ -17,14 +17,21 @@ export async function POST(request: Request) {
   const { txid, ticker, signature, address, pubkey, feeRate } = body;
   const result = await prisma.record.findFirst({
     where: {
-      ticker: {
-        equals: ticker,
-        mode: "insensitive",
-      },
+      OR: [
+        {
+          ticker: {
+            equals: ticker,
+            mode: "insensitive",
+          },
+        },
+        {
+          txid,
+        },
+      ],
     },
   });
   if (result) {
-    return Response.json({ msg: "Ticker already claimed" });
+    return Response.json({ msg: "Ticker or tx already claimed" });
   }
   /// save to database
   const record = await prisma.record.create({
@@ -106,7 +113,7 @@ export async function POST(request: Request) {
     await new Promise((resolve) => setTimeout(resolve, 2000));
     const utxos = await brc20Api.getAddressUtxo(walletAddress);
     utxo = utxos.filter((u) => u.txId === txid);
-    j ++
+    j++;
   }
   if (utxo.length === 0) {
     return Response.json({ msg: "Txid not found" });
@@ -140,7 +147,7 @@ export async function POST(request: Request) {
   const inscribeTx = await inscribe(params);
   const transferTx = await wallet.pushPsbt(inscribeTx.psbt.toHex());
   const inscriptionId = `${transferTx}i0`;
-  let inscriptionsUtxos
+  let inscriptionsUtxos;
   let i = 0;
   while (!inscriptionsUtxos && i < 5) {
     await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -149,7 +156,7 @@ export async function POST(request: Request) {
     } catch (error) {
       console.log(error);
     }
-    i ++
+    i++;
   }
   if (!inscriptionsUtxos) {
     return Response.json({ msg: "Inscription not found" });

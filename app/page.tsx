@@ -44,7 +44,7 @@ export default function Home() {
           id="tooltip"
           className="decoration hover:underline underline-offset-4"
         >
-          Donate
+          donate
         </a>
         <Tooltip id="tooltip" />
       </div>
