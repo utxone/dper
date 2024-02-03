@@ -23,7 +23,7 @@ export function LoadMore({
     );
   return (
     <div className="flex flex-row justify-center space-x-6">
-      {hasPre && (
+      {hasPre ? (
         <div
           className="cursor-pointer hover:text-orange-500"
           onClick={() => {
@@ -32,14 +32,22 @@ export function LoadMore({
         >
           {"<-"}
         </div>
+      ) : (
+        <div className="text-gray-500">
+          {"<-"}
+        </div>
       )}
-      {hasNext && (
+      {hasNext ? (
         <div
           className="cursor-pointer hover:text-orange-500"
           onClick={() => {
             setPage((page) => page + 1);
           }}
         >
+          {"->"}
+        </div>
+      ) : (
+        <div className="text-gray-500">
           {"->"}
         </div>
       )}

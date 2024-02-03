@@ -22,7 +22,7 @@ export default function Tabs() {
         {tab === 'txs' ? 'What\'s op:depr?' : 'Claim records'}
       </motion.div>
       {tab === "info" ? (
-        <h2 className="w-full md:w-[800px] min-h-[400px] font-mono text-center leading-10 text-white">
+        <h2 className="w-full md:w-[800px] min-h-[400px] font-mono text-center leading-8 text-white">
           If you have deployed brc-20 ticker before block{" "}
           <span className="decoration">[819394]</span> , you can claim 1,000
           depr, all depr is available to claim.

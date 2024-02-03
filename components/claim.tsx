@@ -224,7 +224,7 @@ export default function Claim() {
         return;
       }
       setIsLoading(false);
-      setTicker(undefined)
+      setTicker('')
       /// open confirm modal
       setShowModal(true);
     } catch (error) {

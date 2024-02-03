@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { kantumruy } from "@/lib/fonts";
+import Header from '@/components/header'
 
 export const metadata: Metadata = {
   title: "{ op: depr }",
@@ -15,6 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={kantumruy.className}>
+        <Header></Header>
         {children}
       </body>
     </html>
