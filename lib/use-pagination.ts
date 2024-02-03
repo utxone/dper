@@ -32,14 +32,14 @@ export function usePagination<T extends { id: string }>(path: string) {
   const [hasMore, setHasMore] = useState(true);
   
   const hasPre = useMemo(() => page > 1, [page]);
-  const hasNext = useMemo(() => records.length === 5, [records.length]);
+  const hasNext = useMemo(() => records.length === 8, [records.length]);
   const { data, isLoading, error } = useSwr<T[]>(
     {
       path,
       page,
       options,
     },
-    (key: any) => getData<T>(key.path, key.page, 5, key.options)
+    (key: any) => getData<T>(key.path, key.page, 8, key.options)
   );
 
   useEffect(() => {
@@ -53,7 +53,7 @@ export function usePagination<T extends { id: string }>(path: string) {
     if (!data) return;
     if (data.length > 0) {
       setRecords(data);
-    } else {
+    } else if(page > 1) {
       setPage(page-1)
       setHasMore(false);
     }

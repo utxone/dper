@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center p-4 overflow-hidden home relative">
       <h1
-        className={`text-4xl md:text-6xl mt-4 md:mt-52 font-bold font-mono text-love-500 tracking-wider ${urbanist.className}`}
+        className={`text-4xl md:text-6xl mt-32 md:mt-52 font-bold text-love-500 tracking-wider ${urbanist.className}`}
       >
         <span className="text-love-500">{"{"}</span>
         {`op:depr`}

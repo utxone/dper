@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { kantumruy } from "@/lib/fonts";
+import { inter } from "@/lib/fonts";
 import Header from "@/components/header";
 import { WalletConfig } from "@/lib/use-wallet";
 
@@ -16,7 +16,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={kantumruy.className}>
+      <body className={inter.className}>
         <WalletConfig>
           <Header></Header>
           {children}
