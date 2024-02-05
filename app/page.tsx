@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import Claim from "@/components/claim";
 import Tabs from "@/components/tabs";
 import { urbanist } from "@/lib/fonts";
-import { useState } from "react";
+import ClaimRecord from "@/components/records";
 import Tooltip from '@/components/tooltip';
 
 export default function Home() {
@@ -17,8 +17,9 @@ export default function Home() {
       </h1>
       <Claim></Claim>
       <Tabs></Tabs>
+      <ClaimRecord></ClaimRecord>
 
-      <div className="flex flex-row items-center space-x-4 text-xl text-love-500">
+      <div className="mt-20 z-10 flex flex-row items-center space-x-4 text-xl text-love-500">
         <a
           href="https://t.me/+zRyFwy-RxJdmYjY1"
           target="_blank"

@@ -68,7 +68,7 @@ export default function Header() {
           </span>
         ) : (
           <button
-            className="text-xl text-stone-300 rounded-md flex items-center justify-center border bg-black border-love-500 hover:border-love-600 py-2 px-4"
+            className="text-stone-300 rounded-md flex items-center justify-center border bg-black border-love-500 hover:border-love-600 py-2 px-4"
             onClick={() => {
               setShowConnectModal(true);
             }}

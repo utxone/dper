@@ -17,7 +17,12 @@ export default function ClaimRecords() {
   };
   return (
     <>
-      <div className="w-full md:w-[800px] min-h-[400px] text-white">
+      <div
+        className="mt-20 mb-4 text-love-500 cursor-pointer border border-love-500 bg-black rounded-full px-3   transition-all ease-in-out delay-150"
+      >
+        Claim records
+      </div>
+      <div className="relative records w-full md:w-[800px] min-h-[400px] py-6 text-white mt-2 bg-love-500/50 bg-blur rounded-md backdrop-blur-md">
         <div className="flex flex-col space-y-4">
           {records &&
             records.map((record) => (

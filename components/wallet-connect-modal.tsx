@@ -16,7 +16,7 @@ export default function WalletConnectModal({
     if (!wallet) {
       return;
     }
-    const accounts = await wallet.getAccounts();
+    const accounts = await wallet.requestAccounts();
     const network = await wallet.getNetwork();
     if (accounts && accounts.length > 0) {
       walletContext.dispatch!({
