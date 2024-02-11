@@ -40,7 +40,7 @@ export default function WalletConnectModal({
     const getAddressOptions = {
       payload: {
         purposes: ["ordinals", "payment"],
-        message: "{ op: depr }",
+        message: "{ op: dper }",
         network: {
           type: TESTNET ? "Testnet" : "Mainnet",
         },

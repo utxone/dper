@@ -5,14 +5,14 @@ import Header from "@/components/header";
 import { WalletConfig } from "@/lib/use-wallet";
 
 export const metadata: Metadata = {
-  title: "{op:depr}",
+  title: "{op:dper}",
   description: "Airdrop for brc-20 deployers",
   manifest: "/manifest.json",
-  metadataBase: new URL('https://depr.xyz'),
+  metadataBase: new URL('https://dper.xyz'),
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "{op:depr}",
+    title: "{op:dper}",
     // startUpImage: [],
   },
   formatDetection: {
@@ -20,9 +20,9 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    siteName: "{op:depr}",
+    siteName: "{op:dper}",
     title: {
-      default: "depr",
+      default: "dper",
       template: "",
     },
     description: "Airdrop for brc-20 deployers",
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary",
     title: {
-      default: "{op:depr}",
+      default: "{op:dper}",
       template: "",
     },
     description: "Airdrop for brc-20 deployers",

@@ -2,8 +2,8 @@ import { MetadataRoute } from 'next'
  
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: '{ op: depr }',
-    short_name: 'depr',
+    name: '{ op: dper }',
+    short_name: 'dper',
     description: 'Airdrop for brc-20 deployers',
     start_url: '/',
     display: 'standalone',

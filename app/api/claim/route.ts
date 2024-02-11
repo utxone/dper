@@ -47,7 +47,7 @@ export async function POST(request: Request) {
     return Response.json({ msg: "Invalid body" });
   }
   /// verify signature
-  const message = `{op:depr} ${ticker} deployer verification`;
+  const message = `{op:dper} ${ticker} deployer verification`;
   const verified = Verifier.verifySignature(address, message, signature)
 
   if (!verified) {
@@ -129,7 +129,7 @@ export async function POST(request: Request) {
     inscription: {
       contentType: "text/plain;charset=utf-8",
       body: Buffer.from(
-        `{"p":"brc-20","op":"transfer","tick":"depr","amt":"1000"}`
+        `{"p":"brc-20","op":"transfer","tick":"dper","amt":"1000"}`
       ),
     },
     address: walletAddress,

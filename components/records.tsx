@@ -1,13 +1,12 @@
 "use client";
 import { usePagination } from "@/lib/use-pagination";
 import { Record } from "@prisma/client";
-import { useState } from "react";
 import { LoadMore } from "./load-more";
 import { compactAddress, dateFromNow } from "@/lib/utils";
 import { TESTNET } from "@/lib/constant";
 
 export default function ClaimRecords() {
-  const { records, setPage, isLoading, hasNext, hasPre, hasMore } =
+  const { records, setPage, isLoading, hasNext, hasPre, hasMore, total, page } =
     usePagination<Record>("/api/records");
   const txExplorerUrl = (txHash: string) => {
     return `https://mempool.space/${TESTNET ? "testnet/" : "/"}tx/${txHash}`;
@@ -17,19 +16,17 @@ export default function ClaimRecords() {
   };
   return (
     <>
-      <div
-        className="mt-20 mb-4 text-love-500 cursor-pointer border border-love-500 bg-black rounded-full px-3   transition-all ease-in-out delay-150"
-      >
-        Claim records
+      <div className="mt-20 text-xl text-love-500 cursor-pointer rounded-full px-3 transition-all ease-in-out delay-150">
+        [ records ]
       </div>
-      <div className="relative records w-full md:w-[800px] min-h-[400px] py-4 text-white mt-2 rounded-md backdrop-blur-[40px]">
+      <div className="relative records w-full md:w-[800px] min-h-[400px] py-4 text-white mt-2">
         <div className="flex flex-col space-y-4">
           {records &&
             records.map((record) => (
               <div className="font-mono px-4 pb-2 text-center" key={record.id}>
                 <div className="break-words">
                   <span>
-                    {`{"p":"brc-20","op":"depr","tick":"`}
+                    {`{"p":"brc-20","op":"dper","tick":"`}
                     <a
                       href={txOrdUrl(record.ticker)}
                       target="_blank"
@@ -51,7 +48,8 @@ export default function ClaimRecords() {
                 {/* <span className="mt-4 text-sm text-stone-600">{dateFromNow(record.create_at)}</span> */}
               </div>
             ))}
-          {(isLoading && !hasPre) &&
+          {isLoading &&
+            !hasPre &&
             ["✨", "✨"].map((_, index) => (
               <div
                 className="font-mono flex flex-row animate-pulse items-center justify-center"
@@ -68,6 +66,8 @@ export default function ClaimRecords() {
             isLoading={isLoading}
             hasNext={hasNext && hasMore}
             hasPre={hasPre}
+            total={total}
+            page={page}
             setPage={setPage}
             empty={records.length === 0}
           />

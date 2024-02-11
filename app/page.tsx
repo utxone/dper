@@ -7,12 +7,12 @@ import Tooltip from '@/components/tooltip';
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center p-4 overflow-hidden home relative">
+    <main className="flex min-h-screen flex-col items-center p-4 overflow-hidden relative">
       <h1
         className={`text-4xl md:text-6xl mt-32 md:mt-[20%] text-love-500 tracking-wider ${urbanist.className}`}
       >
         <span className="text-love-500">{"{"}</span>
-        {` op:depr `}
+        {` op:dper `}
         <span className="text-love-500">{"}"}</span>
       </h1>
       <Claim></Claim>
@@ -35,11 +35,11 @@ export default function Home() {
           telegram
         </a>
         <a
-          href="https://unisat.io/brc20/depr"
+          href="https://unisat.io/brc20/dper"
           target="_blank"
           className="decoration hover:underline underline-offset-4"
         >
-          depr
+          dper
         </a>
         <a
           id="tooltip"

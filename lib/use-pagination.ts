@@ -9,7 +9,7 @@ export async function getData<T>(
   options?: {
     [key: string]: string;
   }
-): Promise<T[]> {
+): Promise<{ data: T[]; total: number }> {
   const url = queryString.stringify({
     page,
     page_size: pageSize,
@@ -17,11 +17,12 @@ export async function getData<T>(
   });
   const response = await fetch(`${path}?${url}`);
   const result = await response.json();
-  return result as T[];
+  return result as { data: T[]; total: number };
 }
 
 export function usePagination<T extends { id: string }>(path: string) {
   const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
   const [options, setOptions] = useState<
     | {
         [key: string]: string;
@@ -30,10 +31,10 @@ export function usePagination<T extends { id: string }>(path: string) {
   >();
   const [records, setRecords] = useState<T[]>([]);
   const [hasMore, setHasMore] = useState(true);
-  
+
   const hasPre = useMemo(() => page > 1, [page]);
   const hasNext = useMemo(() => records.length === 8, [records.length]);
-  const { data, isLoading, error } = useSwr<T[]>(
+  const { data, isLoading, error } = useSwr<{ data: T[]; total: number }>(
     {
       path,
       page,
@@ -51,20 +52,24 @@ export function usePagination<T extends { id: string }>(path: string) {
 
   useEffect(() => {
     if (!data) return;
-    if (data.length > 0) {
-      setRecords(data);
-    } else if(page > 1) {
-      setPage(page-1)
+    setTotal(data.total)
+    if (data.data.length > 0) {
+      setRecords(data.data);
+    } else if (page > 1) {
+      setPage(page - 1);
       setHasMore(false);
     }
   }, [data]);
 
+
   return {
+    page,
     setPage,
     records,
     hasNext,
     hasMore,
     hasPre,
+    total,
     isLoading,
     setOptions,
     error,

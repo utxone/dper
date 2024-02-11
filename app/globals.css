@@ -19,8 +19,9 @@ body:after {
   position: absolute;
   inset: 0;
   z-index: -10;
-  background-image: radial-gradient(circle, #a3525f 1.5px, transparent 0);
+  background-image: radial-gradient(circle, #a3525f 2px, transparent 0);
 }
+
 
 .home:before {
   content: "";
@@ -30,18 +31,17 @@ body:after {
   left: auto;
   right: auto;
   position: absolute;
-  z-index: -1;
-  background: radial-gradient(rgba(249,115,22,.6) 0%, transparent 60%);
+  background: radial-gradient(rgba(249,115,22) 0%, transparent 60%);
 }
 .records:before {
   content: "";
-  width: 500px;
-  height: 500px;
+  width: 300px;
+  height: 300px;
   top: 10px;
   left: 10px;
   position: absolute;
   z-index: -1;
-  background: radial-gradient(rgba(249,115,22,.4) 0%, transparent 50%);
+  background: radial-gradient(rgba(249,115,22) 0%, rgba(249,115,22, .6) 20%, transparent 60%);
 }
 
 .loader {

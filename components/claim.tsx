@@ -190,7 +190,7 @@ const ConfirmModal = ({
               {isLoading ? (
                 <span className="loader scale-50"></span>
               ) : (
-                <span>Claim 1000 depr</span>
+                <span>Claim 1000 dper</span>
               )}
             </button>
           )}
@@ -230,11 +230,11 @@ export default function Claim() {
     /// get user signature
     /// verify ticker and signature
     try {
-      const message = `{op:depr} ${ticker} deployer verification`;
+      const message = `{op:dper} ${ticker} deployer verification`;
       let signature;
       if (label === "unisat") {
         signature = await (window as any).unisat.signMessage(
-          `{op:depr} ${ticker} deployer verification`,
+          `{op:dper} ${ticker} deployer verification`,
           "bip322-simple"
         );
       } else {
@@ -304,7 +304,7 @@ export default function Claim() {
   };
 
   return (
-    <div className="flex flex-col mt-20 items-center z-10">
+    <div className="flex flex-col mt-20 items-center z-1">
       {account ? (
         <ConfirmModal
           showConfirmModal={showModal}
