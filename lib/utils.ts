@@ -1,6 +1,4 @@
 import dayjs from "dayjs";
-import * as bitcoin from "bitcoinjs-lib";
-import { estimateInscribeFee } from "ord-tools";
 import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
 

@@ -71,29 +71,29 @@ export default function WalletConnectModal({
       clickToClose={true}
       key="wallet-connect-modal"
     >
-      <div className="p-4 py-8 w-full grid grid-cols-2 overflow-hidden bg-love-200 md:max-w-lg md:rounded-md md:shadow-xl">
+      <div className="p-4 py-8 w-full grid grid-cols-2 overflow-hidden border-4 border-love-600/50 bg-love-200/80 backdrop-blur-md md:max-w-lg rounded-lg">
         <button
-          className="p-4 flex rounded-md flex-row space-x-2 h-full w-full hover:bg-love-300"
+          className="p-4 flex rounded-md flex-col items-center space-y-2 h-full w-full hover:bg-love-300"
           onClick={connectUnisat}
         >
           <Image
             src="/logo_unisat.png"
             unoptimized
-            height="30"
-            width="30"
+            height="60"
+            width="60"
             alt="unisat"
           ></Image>
           <span className="text-2xl font-weight">Unisat</span>
         </button>
         <button
-          className="p-4 flex rounded-md flex-row space-x-2 h-full w-full hover:bg-love-300"
+          className="p-4 flex rounded-md flex-col items-center space-y-2 h-full w-full hover:bg-love-300"
           onClick={connectXverse}
         >
           <Image
             src="/logo_xverse.png"
             unoptimized
-            height="30"
-            width="30"
+            height="60"
+            width="60"
             alt="xverse"
           ></Image>
           <span className="text-2xl font-weight">Xverse</span>

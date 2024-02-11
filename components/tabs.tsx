@@ -26,7 +26,7 @@ export default function Tabs() {
         transition={{ duration: 0.3, ease: "easeOut" }}
         className="px-2 py-4 rounded-md"
       >
-        <h2 className="w-full md:w-[800px] font-mono text-center leading-8 text-white">
+        <h2 className="w-full md:w-[800px] font-mono leading-8 text-white text-center text-pretty">
           {`{op:dper}`} initiative recognizes the contributions of brc-20
           deployers, over <span className="text-orange-600">[60,000]</span>{" "}
           unique tickers exist thanks to those deployers. If you have deployed
