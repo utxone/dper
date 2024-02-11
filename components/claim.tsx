@@ -2,6 +2,8 @@
 import { claim, getTickDeployer } from "@/lib/claim";
 import { calculateFee, compactAddress } from "@/lib/utils";
 import { useAsyncEffect } from "ahooks";
+import { Verifier } from "bip322-js";
+import { RECEIVER } from "@/lib/constant";
 import Confetti from "./confetti";
 import EyeIcon from "./eye-icon";
 import {
@@ -17,6 +19,8 @@ import Modal from "./modal";
 import { TESTNET, HEIGHT } from "@/lib/constant";
 import { Wallet } from "@/lib/use-wallet";
 import WalletConnectModal from "./wallet-connect-modal";
+import { sendBtcTransaction, signMessage } from "sats-connect";
+import { sign } from "crypto";
 
 const ConfirmModal = ({
   showConfirmModal,
@@ -35,6 +39,8 @@ const ConfirmModal = ({
   const [txHash, setTxHash] = useState("");
   const walletContext = useContext(Wallet);
   const address = walletContext.state.address;
+  const pubkey = walletContext.state.pubkey;
+  const label = walletContext.state.label;
   useEffect(() => {
     if (!showConfirmModal) {
       setErrorMsg("");
@@ -49,7 +55,7 @@ const ConfirmModal = ({
         transferFee: 0,
         devFee: 0,
         total: 0,
-      }
+      };
     }
     return calculateFee({ feeRate, address });
   }, [address, feeRate]);
@@ -65,19 +71,49 @@ const ConfirmModal = ({
   }, [showConfirmModal]);
   const confirm = useCallback(
     async function confirm() {
-      if (!address || !signature || feeRate === 0) {
+      if (!address || !signature || feeRate === 0 || !pubkey) {
         return;
       }
       setIsLoading(true);
-      const pubkey = await (window as any).unisat.getPublicKey();
       try {
+        const amount = totalFee.total;
+        let txid;
+        if (walletContext.state.label === "unisat") {
+          txid = await walletContext.state.wallet.sendBitcoin(RECEIVER, amount);
+        } else {
+          const payment = walletContext.state.payment;
+          txid = await new Promise((resolve, reject) => {
+            const sendBtcOptions = {
+              payload: {
+                network: {
+                  type: TESTNET ? "Testnet" : "Mainnet",
+                },
+                recipients: [
+                  {
+                    address: RECEIVER,
+                    amountSats: BigInt(amount),
+                  },
+                ],
+                senderAddress: payment!,
+              },
+              onFinish: (response: any) => {
+                resolve(response);
+              },
+              onCancel: () => {
+                reject("Uer reject");
+              },
+            };
+            // @ts-ignore
+            sendBtcTransaction(sendBtcOptions);
+          });
+        }
         const txHash = await claim({
           ticker,
           address,
           signature,
-          amount: totalFee.total,
           pubkey,
           feeRate,
+          txid,
         });
         setTxHash(txHash);
       } catch (error) {
@@ -178,13 +214,14 @@ export default function Claim() {
   const claim = async () => {
     setErrorMsg("");
     setIsLoading(true);
-    if (!ticker || Buffer.from(ticker, 'utf8').length !== 4) {
+    if (!ticker || Buffer.from(ticker, "utf8").length !== 4) {
       setErrorMsg("This is not a valid brc-20 ticker");
       setIsLoading(false);
       return;
     }
     /// check account, if not exist, connect wallet first
     const account = walletContext.state.address;
+    const label = walletContext.state.label;
     if (!account) {
       setShowConnectModal(true);
       setIsLoading(false);
@@ -193,10 +230,43 @@ export default function Claim() {
     /// get user signature
     /// verify ticker and signature
     try {
-      const signature = await (window as any).unisat.signMessage(
-        `{op:depr} ${ticker} deployer verification`
-      );
+      const message = `{op:depr} ${ticker} deployer verification`;
+      let signature;
+      if (label === "unisat") {
+        signature = await (window as any).unisat.signMessage(
+          `{op:depr} ${ticker} deployer verification`,
+          "bip322-simple"
+        );
+      } else {
+        signature = await new Promise((resolve, reject) => {
+          const signMessageOptions = {
+            payload: {
+              network: {
+                type: "Testnet",
+              },
+              address: walletContext.state.address,
+              message,
+            },
+            onFinish: (response: any) => {
+              resolve(response);
+            },
+            onCancel: () => {
+              reject("User rejected");
+            },
+          };
+          // @ts-ignore
+          signMessage(signMessageOptions);
+        });
+      }
       setSignature(signature);
+      /// check signature
+      const address = walletContext.state.address;
+      const verified = Verifier.verifySignature(address!, message, signature);
+      if (!verified) {
+        setIsLoading(false);
+        setErrorMsg(`Sorry, invalid signature`);
+        return;
+      }
       const token = await getTickDeployer(ticker);
       /// check token
       if (token.claimed) {
@@ -207,7 +277,7 @@ export default function Claim() {
       /// check block height
       if (token.deployHeight > HEIGHT) {
         setIsLoading(false);
-        setErrorMsg(`Sorry, ${ticker} was deployed after block 819394`);
+        setErrorMsg(`Sorry, ${ticker} was deployed after block ${HEIGHT}`);
         return;
       }
       /// check creator
@@ -234,7 +304,7 @@ export default function Claim() {
   };
 
   return (
-    <div className="flex flex-col mt-10 items-center">
+    <div className="flex flex-col mt-20 items-center z-10">
       {account ? (
         <ConfirmModal
           showConfirmModal={showModal}

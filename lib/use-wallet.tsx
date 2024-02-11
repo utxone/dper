@@ -20,7 +20,10 @@ export enum Network {
 interface WalletState {
   wallet?: any;
   address?: string;
+  pubkey?: string;
   network?: Network;
+  label?: string;
+  payment?: string
 }
 
 interface WalletAction {
@@ -36,12 +39,15 @@ export const Wallet = createContext<{
 function walletReducer(state: WalletState, action: WalletAction) {
   switch (action.type) {
     case "connect": {
-      const { address, network, wallet } = action.payload as {
+      const { address, pubkey, network, wallet, label, payment } = action.payload as {
         address: string;
+        pubkey: string;
         network: Network;
+        label: string;
+        payment: string;
         wallet: any;
       };
-      return { ...state, address, network, wallet };
+      return { ...state, address, pubkey, network, wallet, label, payment };
     }
     case "updateNetwork": {
       const { network } = action.payload as {
@@ -73,7 +79,7 @@ function WalletConfig({ children }: WalletConfigProps) {
 
   useEffect(() => {
     if (!state.wallet) return;
-    state.wallet.on('networkChanged', (network: Network | undefined) => {
+    state.wallet.on("networkChanged", (network: Network | undefined) => {
       dispatch({
         type: "updateNetwork",
         payload: {
@@ -81,19 +87,17 @@ function WalletConfig({ children }: WalletConfigProps) {
         },
       });
     });
-    state.wallet.on('accountsChanged',
-      (accounts: string[]) => {
-        // If the new account has already connected to your app then the newAccount will be returned
-        if (accounts && accounts.length > 0) {
-          dispatch({
-            type: "updateAddress",
-            payload: {
-              address: accounts[0],
-            },
-          });
-        }
+    state.wallet.on("accountsChanged", (accounts: string[]) => {
+      // If the new account has already connected to your app then the newAccount will be returned
+      if (accounts && accounts.length > 0) {
+        dispatch({
+          type: "updateAddress",
+          payload: {
+            address: accounts[0],
+          },
+        });
       }
-    );
+    });
   }, [state, dispatch]);
 
   return <Wallet.Provider value={value}>{children}</Wallet.Provider>;

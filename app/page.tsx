@@ -9,17 +9,17 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center p-4 overflow-hidden home relative">
       <h1
-        className={`text-4xl md:text-6xl mt-32 md:mt-52 text-love-500 tracking-wider ${urbanist.className}`}
+        className={`text-4xl md:text-6xl mt-32 md:mt-[20%] text-love-500 tracking-wider ${urbanist.className}`}
       >
         <span className="text-love-500">{"{"}</span>
-        {`op:depr`}
+        {` op:depr `}
         <span className="text-love-500">{"}"}</span>
       </h1>
       <Claim></Claim>
       <Tabs></Tabs>
       <ClaimRecord></ClaimRecord>
 
-      <div className="mt-20 z-10 flex flex-row items-center space-x-4 text-xl text-love-500">
+      <div className="mt-24 z-10 flex flex-row items-center space-x-4 text-xl text-love-500">
         <a
           href="https://t.me/+zRyFwy-RxJdmYjY1"
           target="_blank"

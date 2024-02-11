@@ -1,5 +1,6 @@
 import { networks } from "bitcoinjs-lib";
 import { prisma } from "@/lib/prisma";
+import { Verifier } from 'bip322-js';
 import {
   LocalWallet,
   NetworkType,
@@ -9,7 +10,6 @@ import {
 } from "ord-tools";
 import { AddressType } from "ord-tools/lib/types";
 import { TESTNET, HEIGHT } from "@/lib/constant";
-import { verifyMessage } from "@/lib/claim";
 import { calculateFee } from "@/lib/utils";
 
 export async function POST(request: Request) {
@@ -48,11 +48,7 @@ export async function POST(request: Request) {
   }
   /// verify signature
   const message = `{op:depr} ${ticker} deployer verification`;
-  const verified = verifyMessage({
-    message,
-    pubkey,
-    signature,
-  });
+  const verified = Verifier.verifySignature(address, message, signature)
 
   if (!verified) {
     return Response.json({ msg: "Invalid signature" });
@@ -71,7 +67,7 @@ export async function POST(request: Request) {
   /// check block height
   if (token.data.deployHeight > HEIGHT) {
     return Response.json({
-      msg: "ticker was not deployed before block 819394",
+      msg: `ticker was not deployed before block ${HEIGHT}`,
     });
   }
   /// check creator

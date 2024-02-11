@@ -22,7 +22,7 @@ export default function ClaimRecords() {
       >
         Claim records
       </div>
-      <div className="relative records w-full md:w-[800px] min-h-[400px] py-6 text-white mt-2 bg-love-500/50 bg-blur rounded-md backdrop-blur-md">
+      <div className="relative records w-full md:w-[800px] min-h-[400px] py-4 text-white mt-2 rounded-md backdrop-blur-[40px]">
         <div className="flex flex-col space-y-4">
           {records &&
             records.map((record) => (

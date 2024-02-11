@@ -18,6 +18,7 @@
     "@prisma/client": "^5.7.0",
     "ahooks": "^3.7.8",
     "bip32": "^4.0.0",
+    "bip322-js": "^1.1.0",
     "bitcoinjs-lib": "^6.1.5",
     "bitcoinjs-lib-mpc": "^6.1.16",
     "bitcore-lib": "^10.0.0",
@@ -32,6 +33,7 @@
     "react-confetti": "^6.1.0",
     "react-dom": "^18",
     "react-tooltip": "^5.26.0",
+    "sats-connect": "^1.4.1",
     "swr": "^2.2.4"
   },
   "devDependencies": {

@@ -1,6 +1,5 @@
 import bitcore from "bitcore-lib";
 
-import { RECEIVER } from "./constant";
 import {
   LocalWallet,
   NetworkType,
@@ -24,21 +23,20 @@ export async function getTickDeployer(tick: string) {
 }
 
 export async function claim({
-  amount,
   ticker,
   signature,
   address,
   pubkey,
   feeRate,
+  txid,
 }: {
-  amount: number;
   ticker: string;
   signature: string;
   address: string;
   pubkey: string;
   feeRate: number;
+  txid: string;
 }) {
-  let txid = await (window as any).unisat.sendBitcoin(RECEIVER, amount);
   const res = await fetch(`/api/claim`, {
     method: "POST",
     body: JSON.stringify({
