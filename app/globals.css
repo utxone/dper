@@ -22,7 +22,6 @@ body:after {
   background-image: radial-gradient(circle, #a3525f 2px, transparent 0);
 }
 
-
 .home:before {
   content: "";
   width: max(1000px, 100vw);
@@ -31,7 +30,7 @@ body:after {
   left: auto;
   right: auto;
   position: absolute;
-  background: radial-gradient(rgba(249,115,22) 0%, transparent 60%);
+  background: radial-gradient(rgba(249, 115, 22) 0%, transparent 60%);
 }
 .records:before {
   content: "";
@@ -41,7 +40,11 @@ body:after {
   left: 10px;
   position: absolute;
   z-index: -1;
-  background: radial-gradient(rgba(249,115,22) 0%, rgba(249,115,22, .6) 20%, transparent 60%);
+  background: radial-gradient(
+    rgba(249, 115, 22) 0%,
+    rgba(249, 115, 22, 0.6) 20%,
+    transparent 60%
+  );
 }
 
 .loader {
@@ -86,7 +89,7 @@ body:after {
   height: 24px;
   border-radius: 50%;
   position: relative;
-  animation: rotate 1s linear infinite
+  animation: rotate 1s linear infinite;
 }
 .spinner-loader::before {
   content: "";
@@ -94,18 +97,67 @@ body:after {
   position: absolute;
   inset: 0px;
   border-radius: 50%;
-  border: 2px solid #FFF;
-  animation: prixClipFix 2s linear infinite ;
+  border: 2px solid #fff;
+  animation: prixClipFix 2s linear infinite;
 }
 
 @keyframes rotate {
-  100%   {transform: rotate(360deg)}
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes prixClipFix {
-    0%   {clip-path:polygon(50% 50%,0 0,0 0,0 0,0 0,0 0)}
-    25%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 0,100% 0,100% 0)}
-    50%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,100% 100%,100% 100%)}
-    75%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,0 100%,0 100%)}
-    100% {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,0 100%,0 0)}
+  0% {
+    clip-path: polygon(50% 50%, 0 0, 0 0, 0 0, 0 0, 0 0);
+  }
+  25% {
+    clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 0, 100% 0, 100% 0);
+  }
+  50% {
+    clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 100% 100%, 100% 100%);
+  }
+  75% {
+    clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 100%);
+  }
+  100% {
+    clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 0);
+  }
+}
+
+@keyframes rotate {
+  100% {
+    transform: rotate(1turn);
+  }
+}
+
+.glow::before {
+  content: "";
+  position: absolute;
+  z-index: -2;
+  left: -50%;
+  top: -100%;
+  width: 200%;
+  height: 300%;
+  background-color: #efdbe0;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  background-image: conic-gradient(
+    transparent,
+    rgba(249, 115, 22, 1),
+    transparent 30%
+  );
+  animation: rotate 3s linear infinite;
+}
+
+.glow::after {  
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 5px;
+  top: 5px;
+  width: calc(100% - 10px);
+  height: calc(100% - 10px);
+  background: #efdbe0;
+  border-radius: 5px;
 }

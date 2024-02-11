@@ -137,7 +137,7 @@ const ConfirmModal = ({
       key="confirm-modal"
     >
       <Confetti />
-      <div className="p-4 w-full overflow-hidden bg-love-100/60 backdrop-blur md:max-w-lg rounded-lg border-4 border-love-600/50">
+      <div className="relative p-4 py-8 w-full glow grid grid-cols-2 overflow-hidden md:max-w-lg rounded-lg">
         <div className="text-orange-600 px-6 pt-4 text-2xl font-semibold text-center">
           {`Dear ${ticker} deployer, thanks for your contribution!`}
         </div>
