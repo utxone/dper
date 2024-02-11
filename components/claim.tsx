@@ -167,13 +167,13 @@ const ConfirmModal = ({
         <div className="my-4 px-6 flex flex-col items-center justify-center">
           {txHash ? (
             <div className="flex flex-col items-center">
-              <span className="text-orange-500">
+              <span className="text-orange-700">
                 Claim successfully! Please check your wallet shortly.{" "}
               </span>
               <a
                 href={txExplorerUrl}
                 target="_blank"
-                className="text-sm text-[#1bd8f4] flex flex-row items-center space-x-1"
+                className="text-black text-sm flex flex-row items-center space-x-1"
               >
                 <EyeIcon />
                 <span className="underline ">View on Mempool</span>
