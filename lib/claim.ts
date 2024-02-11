@@ -113,7 +113,7 @@ export async function inscribeAndSend() {
     inscription: {
       contentType: "text/plain;charset=utf-8",
       body: Buffer.from(
-        `{"p": "brc-20","op": "transfer","tick": "depr","amt": "1000"}`
+        `{"p": "brc-20","op": "transfer","tick": "dper","amt": "1000"}`
       ),
     },
     address: walletAddress,
