@@ -1,6 +1,6 @@
 # {op: dper}
 [![Claim](https://img.shields.io/badge/website-claim-c07484)](https://dper.xyz/)
-[![View](https://img.shields.io/badge/unisat-view-orange)](https://dper.xyz/)
+[![View](https://img.shields.io/badge/unisat-view-orange)](https://unisat.io/brc20/dper)
 ![GitHub License](https://img.shields.io/github/license/utxo-labs/dper)
 
 Airdrop for brc-20 deployers!
