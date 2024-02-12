@@ -1,17 +1,7 @@
-"use client";
-import { useState } from "react";
 import { motion } from "framer-motion";
 import { HEIGHT } from "@/lib/constant";
 
-export default function Tabs() {
-  const [tab, setTab] = useState("txs");
-  function changeTab() {
-    if (tab === "info") {
-      setTab("txs");
-    } else {
-      setTab("info");
-    }
-  }
+export default function About() {
   return (
     <>
       <motion.div
