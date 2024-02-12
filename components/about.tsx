@@ -1,19 +1,14 @@
-import { motion } from "framer-motion";
 import { HEIGHT } from "@/lib/constant";
 
 export default function About() {
   return (
     <>
-      <motion.div
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.2, ease: "easeOut" }}
+      <div
         className="mt-48 text-xl text-love-500 cursor-pointer bg-black rounded-full px-3 transition-all ease-in-out delay-150"
       >
         [ about ]
-      </motion.div>
-      <motion.div
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.3, ease: "easeOut" }}
+      </div>
+      <div
         className="px-2 py-4 rounded-md"
       >
         <h2 className="w-full md:w-[800px] font-mono leading-8 text-white text-center text-pretty">
@@ -25,7 +20,7 @@ export default function About() {
           to claim <span className="text-orange-600">[1,000]</span> dper, the
           entire supply is available for eligible addresses!{" "}
         </h2>
-      </motion.div>
+      </div>
     </>
   );
 }
