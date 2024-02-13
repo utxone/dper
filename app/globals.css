@@ -136,9 +136,9 @@ body:after {
   position: absolute;
   z-index: -2;
   left: -50%;
-  top: -100%;
+  top: -150%;
   width: 200%;
-  height: 300%;
+  height: 400%;
   background-color: #efdbe0;
   background-repeat: no-repeat;
   background-position: 0 0;

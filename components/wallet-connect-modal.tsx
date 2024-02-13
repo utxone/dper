@@ -72,7 +72,7 @@ export default function WalletConnectModal({
       key="wallet-connect-modal"
     >
 
-      <div className="relative p-4 py-8 mx-4 w-full glow grid grid-cols-2 overflow-hidden md:max-w-lg rounded-lg">
+      <div className="relative p-4 mx-4 w-full glow grid grid-cols-2 overflow-hidden md:max-w-lg rounded-lg">
         <button
           className="p-4 flex rounded-md flex-col items-center space-y-2 h-full w-full hover:bg-love-300"
           onClick={connectUnisat}

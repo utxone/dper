@@ -40,6 +40,7 @@ const ConfirmModal = ({
   const [txHash, setTxHash] = useState("");
   const [openPopover, setOpenPopover] = useState(false);
   const [feeSummary, setFeeSummary] = useState([]);
+  const [price, setPrice] = useState(0);
   const walletContext = useContext(Wallet);
   const address = walletContext.state.address;
   const pubkey = walletContext.state.pubkey;
@@ -62,13 +63,23 @@ const ConfirmModal = ({
     }
     return calculateFee({ feeRate, address });
   }, [address, feeRate]);
+  const totalUsd = useMemo(() => {
+    if (!totalFee.total || !price) return 0;
+    console.log(price);
+    return (
+      Math.floor((totalFee.total * price) / 10 ** 6) / 100
+    ).toLocaleString("en-US");
+  }, [price, totalFee.total]);
   useAsyncEffect(async () => {
     const res = await fetch(
       `https://mempool.space/${
         TESTNET ? "testnet/" : ""
       }api/v1/fees/recommended`
     );
+    const priceRes = await fetch("https://mempool.space/api/v1/prices");
+    const price = await priceRes.json();
     const feeSummary = await res.json();
+    setPrice(price.USD);
     setFeeSummary(Object.values(feeSummary));
     const feeRate = feeSummary.halfHourFee;
     setFeeRate(feeRate);
@@ -218,7 +229,7 @@ const ConfirmModal = ({
           </div>
           <div className="flex flex-row justify-between">
             <span className="font-bold">Total fee</span>
-            <span>{totalFee.total} sats</span>
+            <span>{totalFee.total} sats [~{totalUsd} $]</span>
           </div>
         </div>
 
@@ -239,7 +250,7 @@ const ConfirmModal = ({
             </div>
           ) : (
             <button
-              className="h-16 w-60 text-xl md:text-2xl rounded-lg flex items-center justify-center bg-orange-500 hover:bg-orange-600 py-4 px-6"
+              className="h-16 w-60 text-xl md:text-2xl rounded-lg flex items-center justify-center bg-love-500 hover:bg-love-600 py-4 px-6"
               disabled={isLoading}
               onClick={() => {
                 confirm();
@@ -273,7 +284,7 @@ export default function Claim() {
     setErrorMsg("");
     setIsLoading(true);
     if (!ticker || Buffer.from(ticker, "utf8").length !== 4) {
-      setErrorMsg("This is not a valid brc-20 ticker");
+      setErrorMsg("Please enter a valid brc-20 ticker");
       setIsLoading(false);
       return;
     }
