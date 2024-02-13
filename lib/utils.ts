@@ -38,7 +38,7 @@ export function calculateFee({
   const outputSize = getAddressOutputSize(address);
   const inscriptionBalance = 546; // the balance in each inscription
   const devFee = DEV_FEE; // the fee for developer
-  const transferSize = 57.5 * 2 + 43 + outputSize + 10.5; // send ord miner fee
+  const transferSize = 57.5 * 2 + (devFee === 0 ? 0 : 43) + outputSize + 10.5; // send ord miner fee
   const firstTransferSize = 154 * feeRate; // gas fee for send balance to inscribe account
   const networkSats = Math.ceil(152.5 * feeRate)
   const inscribeFee = inscriptionBalance + networkSats + firstTransferSize;
