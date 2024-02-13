@@ -25,7 +25,7 @@ export const metadata: Metadata = {
       default: "dper",
       template: "",
     },
-    description: "Airdrop for brc-20 deployers",
+    description: "Airdrop for brc-20 deployers.",
   },
   twitter: {
     card: "summary",
@@ -33,12 +33,12 @@ export const metadata: Metadata = {
       default: "{op:dper}",
       template: "",
     },
-    description: "Airdrop for brc-20 deployers",
+    description: "Airdrop for brc-20 deployers.",
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#000",
+  themeColor: "#fff",
 };
 
 export default function RootLayout({
