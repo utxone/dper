@@ -12,7 +12,7 @@ primary_region = 'hkg'
   NEXT_PUBLIC_RECEIVER = 'bc1pcstr997qx3z2vs7pts8zgp0cczynsqlc8x837amfxly0wkuu5mxsudlq7a'
   NEXT_PUBLIC_HEIGHT= '830000'
   NEXT_PUBLIC_DONATE_ADDRESS = 'bc1pfmjpgv7pffcgj0l8jgpq6ulf0uy4x8e2m3v2juxmakej7unucknqqese9l'
-  NEXT_UNISAT_API_URL = 'https://open-api.unisat.io/v1'
+  NEXT_PUBLIC_UNISAT_API_URL = 'https://open-api.unisat.io/v1'
 
 [build]
   [build.args]
