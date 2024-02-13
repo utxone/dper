@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  background: #000;
+  background: #fff;
   position: relative;
   -webkit-font-smoothing: antialiased;
 }
@@ -158,6 +158,6 @@ body:after {
   top: 5px;
   width: calc(100% - 10px);
   height: calc(100% - 10px);
-  background: #efdbe0;
+  background: #fff;
   border-radius: 5px;
 }

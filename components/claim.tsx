@@ -20,7 +20,8 @@ import { TESTNET, HEIGHT } from "@/lib/constant";
 import { Wallet } from "@/lib/use-wallet";
 import WalletConnectModal from "./wallet-connect-modal";
 import { sendBtcTransaction, signMessage } from "sats-connect";
-import { sign } from "crypto";
+import Popover from "./popover";
+import DropdownIcon from "./dropdown-icon";
 
 const ConfirmModal = ({
   showConfirmModal,
@@ -37,10 +38,12 @@ const ConfirmModal = ({
   const [isLoading, setIsLoading] = useState(false);
   const [feeRate, setFeeRate] = useState(0);
   const [txHash, setTxHash] = useState("");
+  const [openPopover, setOpenPopover] = useState(false);
+  const [feeSummary, setFeeSummary] = useState([]);
   const walletContext = useContext(Wallet);
   const address = walletContext.state.address;
   const pubkey = walletContext.state.pubkey;
-  const label = walletContext.state.label;
+
   useEffect(() => {
     if (!showConfirmModal) {
       setErrorMsg("");
@@ -66,6 +69,7 @@ const ConfirmModal = ({
       }api/v1/fees/recommended`
     );
     const feeSummary = await res.json();
+    setFeeSummary(Object.values(feeSummary));
     const feeRate = feeSummary.halfHourFee;
     setFeeRate(feeRate);
   }, [showConfirmModal]);
@@ -142,9 +146,63 @@ const ConfirmModal = ({
           {`Dear ${ticker} deployer, thanks for your contribution!`}
         </div>
         <div className="px-8 my-8 flex flex-col space-y-2 w-full">
-          <div className="flex flex-row justify-between">
-            <span>FeeRate</span>
-            <span>{feeRate} sats/vB</span>
+          <div className="w-full flex flex-row justify-between">
+            <span>Fee rate</span>
+            <Popover
+              content={
+                <>
+                  <div className="w-full rounded-md bg-love-100 p-1 sm:w-40">
+                    <button
+                      className="relative flex w-full items-center justify-between space-x-2 rounded-md p-2 text-left text-sm transition-all duration-75 hover:bg-love-400"
+                      onClick={(event) => {
+                        setFeeRate(feeSummary[0]);
+                        setOpenPopover(false);
+                      }}
+                    >
+                      <span>Fast</span>
+                      <p className="text-sm">{feeSummary[0]} sats/vB</p>
+                    </button>
+                  </div>
+                  <div className="w-full rounded-md bg-love-100 p-1 sm:w-40">
+                    <button
+                      className="relative flex w-full items-center justify-between space-x-2 rounded-md p-2 text-left text-sm transition-all duration-75 hover:bg-love-400"
+                      onClick={() => {
+                        setFeeRate(feeSummary[1]);
+                        setOpenPopover(false);
+                      }}
+                    >
+                      <span>Average</span>
+                      <p className="text-sm">{feeSummary[1]} sats/vB</p>
+                    </button>
+                  </div>
+                  <div className="w-full rounded-md bg-love-100 p-1 sm:w-40">
+                    <button
+                      className="relative flex w-full items-center justify-between space-x-2 rounded-md p-2 text-left text-sm transition-all duration-75 hover:bg-love-400"
+                      onClick={() => {
+                        setFeeRate(feeSummary[2]);
+                        setOpenPopover(false);
+                      }}
+                    >
+                      <span>Slow</span>
+                      <p className="text-sm">{feeSummary[2]} sats/vB</p>
+                    </button>
+                  </div>
+                </>
+              }
+              align="end"
+              setOpenPopover={setOpenPopover}
+              openPopover={openPopover}
+            >
+              <div
+                onClick={() => setOpenPopover(!openPopover)}
+                className="flex cursor-pointer flex-row items-center justify-center overflow-hidden border-none transition-all duration-75 focus:border-none focus:outline-none"
+              >
+                <span>
+                  {feeRate} sats/vB
+                  <DropdownIcon className="inline" />
+                </span>
+              </div>
+            </Popover>
           </div>
           <div className="flex flex-row justify-between">
             <span>Transfer inscribe fee</span>

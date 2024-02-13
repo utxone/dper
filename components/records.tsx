@@ -16,10 +16,10 @@ export default function ClaimRecords() {
   };
   return (
     <>
-      <div className="mt-20 text-xl text-love-500 cursor-pointer rounded-full px-3 transition-all ease-in-out delay-150">
+      <div className="mt-20 text-xl text-love-500 cursor-pointer bg-black rounded-sm px-3 transition-all ease-in-out delay-150">
         [ records ]
       </div>
-      <div className="relative records w-full md:w-[800px] min-h-[400px] py-4 text-white mt-2">
+      <div className="relative records w-full md:w-[800px] min-h-[400px] py-4 text-stone-800 mt-2">
         <div className="flex flex-col space-y-4">
           {records &&
             records.map((record) => (

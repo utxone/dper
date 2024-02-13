@@ -20,7 +20,7 @@ export default function Header() {
         />
       )}
       <div
-        className="fixed top-0 py-4 px-4 md:px-8 w-full flex flex-row justify-between text-stone-300 backdrop-blur-md home"
+        className="fixed top-0 py-4 px-4 md:px-8 w-full flex flex-row justify-between text-stone-800 backdrop-blur-md home"
         style={{ "zIndex": 10 }}
       >
         <Link href="/">
@@ -70,7 +70,7 @@ export default function Header() {
           </svg>
         </Link>
         {address ? (
-          <span className=" text-stone-300 text-xl font-mono">
+          <span className=" text-stone-800 text-xl font-mono">
             {compactAddress(address)}
           </span>
         ) : (
