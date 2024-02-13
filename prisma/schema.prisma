@@ -5,15 +5,15 @@ generator client {
 datasource db {
   provider     = "postgresql"
   url          = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  directUrl    = env("DIRECT_URL")
   relationMode = "prisma"
 }
 
 model Record {
-  id           String   @id @default(cuid())
-  create_at    DateTime @default(now())
-  ticker       String
-  holder       String
-  hash         String
-  txid         String
+  id        String   @id @default(cuid())
+  create_at DateTime @default(now())
+  ticker    String
+  holder    String
+  hash      String
+  txid      String
 }

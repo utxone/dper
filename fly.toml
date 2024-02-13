@@ -1,0 +1,32 @@
+# fly.toml app configuration file generated for dper on 2024-02-13T20:51:44+08:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'dper'
+primary_region = 'hkg'
+
+[env]
+  NEXT_PUBLIC_TESTNET = 'false'
+  NEXT_PUBLIC_DEV_FEE = '0'
+  NEXT_PUBLIC_RECEIVER = 'bc1pcstr997qx3z2vs7pts8zgp0cczynsqlc8x837amfxly0wkuu5mxsudlq7a'
+  NEXT_PUBLIC_HEIGHT= '830000'
+  NEXT_PUBLIC_DONATE_ADDRESS = 'bc1pfmjpgv7pffcgj0l8jgpq6ulf0uy4x8e2m3v2juxmakej7unucknqqese9l'
+  NEXT_UNISAT_API_URL = 'https://open-api.unisat.io/v1'
+
+[build]
+  [build.args]
+    NODE_VERSION = "18"
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[vm]]
+  cpu_kind = 'shared'
+  cpus = 1
+  memory_mb = 1024

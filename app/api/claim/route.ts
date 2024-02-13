@@ -54,7 +54,7 @@ export async function POST(request: Request) {
     return Response.json({ msg: "Invalid signature" });
   }
   const res = await fetch(
-    `${process.env.UNISAT_API_URL}/indexer/brc20/${ticker}/info`,
+    `${process.env.NEXT_UNISAT_API_URL}/indexer/brc20/${ticker}/info`,
     {
       headers: {
         "Content-Type": "application/json",
@@ -78,7 +78,7 @@ export async function POST(request: Request) {
   /// check txid
   try {
     const resTx = await fetch(
-      `${process.env.UNISAT_API_URL}/indexer/tx/${txid}/outs`,
+      `${process.env.NEXT_UNISAT_API_URL}/indexer/tx/${txid}/outs`,
       {
         headers: {
           "Content-Type": "application/json",
