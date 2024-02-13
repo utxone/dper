@@ -19,34 +19,35 @@ export default function Home() {
       <About></About>
       <ClaimRecord></ClaimRecord>
 
-      <div className="px-2 rounded-sm mt-24 z-10 flex flex-row items-center space-x-4 text-xl bg-black text-love-500">
+      <div className="mt-24 z-10 flex flex-row items-center space-x-4 text-xl bg-white text-love-500">
+        [
         <a
           href="https://t.me/+zRyFwy-RxJdmYjY1"
           target="_blank"
           className="decoration hover:underline underline-offset-4 cursor-pointer"
         >
-          x
+          x,
         </a>
         <a
           href="https://t.me/+zRyFwy-RxJdmYjY1"
           target="_blank"
           className="decoration hover:underline underline-offset-4 cursor-pointer"
         >
-          telegram
+          telegram,
         </a>
         <a
           href="https://github.com/utxo-labs/dper"
           target="_blank"
           className="decoration hover:underline underline-offset-4 cursor-pointer"
         >
-         github 
+         github,
         </a>
         <a
           href="https://unisat.io/brc20/dper"
           target="_blank"
           className="decoration hover:underline underline-offset-4"
         >
-          dper
+          dper,
         </a>
         <a
           id="tooltip"
@@ -54,6 +55,7 @@ export default function Home() {
         >
           donate
         </a>
+        ]
         <Tooltip id="tooltip" />
       </div>
     </main>
