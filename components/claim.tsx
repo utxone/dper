@@ -353,7 +353,7 @@ export default function Claim() {
       if (token.creator !== account) {
         setIsLoading(false);
         setErrorMsg(
-          `${ticker} wad deployed by ${compactAddress(
+          `${ticker} wa deployed by ${compactAddress(
             token.creator
           )}, please connect with that account.`
         );

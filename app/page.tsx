@@ -19,7 +19,7 @@ export default function Home() {
       <About></About>
       <ClaimRecord></ClaimRecord>
 
-      <div className="mt-24 z-10 flex flex-row items-center space-x-4 text-xl text-love-500">
+      <div className="px-2 rounded-sm mt-24 z-10 flex flex-row items-center space-x-4 text-xl bg-black text-love-500">
         <a
           href="https://t.me/+zRyFwy-RxJdmYjY1"
           target="_blank"
