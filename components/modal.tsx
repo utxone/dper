@@ -29,7 +29,7 @@ export default function Modal({
         setShowModal(false);
       }
     },
-    [setShowModal],
+    [setShowModal]
   );
 
   useEffect(() => {
@@ -43,38 +43,52 @@ export default function Modal({
     <AnimatePresence>
       {showModal && (
         <>
-          {isMobile && <Leaflet setShow={setShowModal}>{children}</Leaflet>}
-          {isDesktop && (
-            <>
-              <FocusTrap focusTrapOptions={{ initialFocus: false }}>
-                <motion.div
-                  ref={desktopModalRef}
-                  key="desktop-modal"
-                  className="fixed inset-0 z-40 hidden min-h-screen items-center justify-center md:flex"
-                  initial={{ scale: 0.95 }}
-                  animate={{ scale: 1 }}
-                  exit={{ scale: 0.95 }}
-                  onMouseDown={(e) => {
-                    if (desktopModalRef.current === e.target && clickToClose) {
-                      setShowModal(false);
-                    }
-                  }}
-                >
-                  {children}
-                </motion.div>
-              </FocusTrap>
+          {" "}
+          {isDesktop ? (
+            <FocusTrap focusTrapOptions={{ initialFocus: false }}>
               <motion.div
-                key="desktop-backdrop"
-                className="fixed inset-0 z-30 bg-black bg-opacity-70"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                onClick={() => {
-                  if (clickToClose) setShowModal(false);
+                ref={desktopModalRef}
+                key="desktop-modal"
+                className="fixed inset-0 z-40 hidden min-h-screen items-center justify-center md:flex"
+                initial={{ scale: 0.95 }}
+                animate={{ scale: 1 }}
+                exit={{ scale: 0.95 }}
+                onMouseDown={(e) => {
+                  if (desktopModalRef.current === e.target && clickToClose) {
+                    setShowModal(false);
+                  }
                 }}
-              />
-            </>
+              >
+                {children}
+              </motion.div>
+            </FocusTrap>
+          ) : (
+            <motion.div
+              ref={desktopModalRef}
+              key="desktop-modal"
+              className="fixed inset-0 z-40 flex min-h-screen items-center justify-center"
+              initial={{ scale: 0.95 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.95 }}
+              onMouseDown={(e) => {
+                if (desktopModalRef.current === e.target && clickToClose) {
+                  setShowModal(false);
+                }
+              }}
+            >
+              {children}
+            </motion.div>
           )}
+          <motion.div
+            key="desktop-backdrop"
+            className="fixed inset-0 z-30 bg-black bg-opacity-70"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => {
+              if (clickToClose) setShowModal(false);
+            }}
+          />
         </>
       )}
     </AnimatePresence>

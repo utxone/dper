@@ -137,7 +137,7 @@ const ConfirmModal = ({
       key="confirm-modal"
     >
       <Confetti />
-      <div className="relative p-4 w-full glow grid grid-cols-1 overflow-hidden md:max-w-lg rounded-lg">
+      <div className="relative p-4 mx-4 w-full glow grid grid-cols-1 overflow-hidden md:max-w-lg rounded-lg">
         <div className="text-orange-600 px-6 pt-4 text-2xl font-semibold text-center">
           {`Dear ${ticker} deployer, thanks for your contribution!`}
         </div>
@@ -167,7 +167,7 @@ const ConfirmModal = ({
         <div className="my-4 px-6 flex flex-col items-center justify-center">
           {txHash ? (
             <div className="flex flex-col items-center">
-              <span className="text-orange-700">
+              <span className="text-orange-700 text-center">
                 Claim successfully! Please check your wallet shortly.{" "}
               </span>
               <a

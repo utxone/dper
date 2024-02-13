@@ -1,6 +1,6 @@
 import { networks } from "bitcoinjs-lib";
 import { prisma } from "@/lib/prisma";
-import { Verifier } from 'bip322-js';
+import { Verifier } from "bip322-js";
 import {
   LocalWallet,
   NetworkType,
@@ -48,7 +48,7 @@ export async function POST(request: Request) {
   }
   /// verify signature
   const message = `{op:dper} ${ticker} deployer verification`;
-  const verified = Verifier.verifySignature(address, message, signature)
+  const verified = Verifier.verifySignature(address, message, signature);
 
   if (!verified) {
     return Response.json({ msg: "Invalid signature" });
@@ -78,19 +78,27 @@ export async function POST(request: Request) {
   /// check txid
   try {
     const resTx = await fetch(
-      `https://mempool.space/${TESTNET ? "testnet/" : ""}api/tx/${txid}`
+      `${process.env.UNISAT_API_URL}/indexer/tx/${txid}/outs`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + process.env.UNISAT_API_KEY,
+        },
+      }
     );
     if (resTx.status != 200) {
-      return Response.json({ msg: "invalid txid" });
+      return Response.json({ msg: "Server error, please contact us" });
     }
     const tx = await resTx.json();
+    if(tx.code !== 0) {
+      return Response.json({ msg: tx.msg });
+    }
     const fee = calculateFee({ feeRate, address });
-    console.log(fee, tx.vout[0].value);
-    if (tx.vout[0].value !== fee.total) {
-      return Response.json({ msg: "invalid tx" });
+    if (tx.data[0].satoshi !== fee.total) {
+      return Response.json({ msg: "Tx not found" });
     }
   } catch (error) {
-    return Response.json({ msg: "error occurred" });
+    return Response.json({ msg: "Server error, please contact us" });
   }
   /// inscribe and transfer
   const wif = process.env.WALLET_WIF!;
