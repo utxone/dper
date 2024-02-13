@@ -76,30 +76,31 @@ export async function POST(request: Request) {
   }
 
   /// check txid
-  try {
-    const resTx = await fetch(
-      `${process.env.NEXT_PUBLIC_UNISAT_API_URL}/indexer/tx/${txid}/outs`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + process.env.UNISAT_API_KEY,
-        },
-      }
-    );
-    if (resTx.status != 200) {
-      return Response.json({ msg: "Server error, please contact us" });
-    }
-    const tx = await resTx.json();
-    if(tx.code !== 0) {
-      return Response.json({ msg: tx.msg });
-    }
-    const fee = calculateFee({ feeRate, address });
-    if (tx.data[0].satoshi !== fee.total) {
-      return Response.json({ msg: "Tx not found" });
-    }
-  } catch (error) {
-    return Response.json({ msg: "Server error, please contact us" });
-  }
+  // try {
+  //   const resTx = await fetch(
+  //     `${process.env.NEXT_PUBLIC_UNISAT_API_URL}/indexer/tx/${txid}/outs`,
+  //     {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: "Bearer " + process.env.UNISAT_API_KEY,
+  //       },
+  //     }
+  //   );
+  //   if (resTx.status != 200) {
+  //     return Response.json({ msg: "Server error, please contact us" });
+  //   }
+  //   const tx = await resTx.json();
+  //   console.log({ tx });
+  //   if (tx.code !== 0) {
+  //     return Response.json({ msg: tx.msg });
+  //   }
+  //   const fee = calculateFee({ feeRate, address });
+  //   if (tx.data[0].satoshi !== fee.total) {
+  //     return Response.json({ msg: "Tx not found" });
+  //   }
+  // } catch (error) {
+  //   return Response.json({ msg: "Server error, please contact us" });
+  // }
   /// inscribe and transfer
   const wif = process.env.WALLET_WIF!;
   const wallet = new LocalWallet(
@@ -121,6 +122,11 @@ export async function POST(request: Request) {
   }
   if (utxo.length === 0) {
     return Response.json({ msg: "Txid not found" });
+  }
+   const fee = calculateFee({ feeRate, address });
+  if (utxo[0].satoshis < fee.total) {
+     return Response.json({ msg: "Tx amount not match, please contact us" });
+
   }
   const params = {
     utxos: utxo.map((v) => {
