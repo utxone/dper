@@ -7,9 +7,7 @@ export async function GET(
 ) {
   if (!params.id || params.id.length !== 4)
     return Response.json({ msg: "Invalid ticker" });
-  console.log(`${process.env.UNISAT_API_URL}/indexer/brc20/${params.id}/info`);
-
-  const res = await fetch(`${process.env.UNISAT_API_URL}/indexer/brc20/${params.id}/info`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_UNISAT_API_URL}/indexer/brc20/${params.id}/info`, {
     headers: {
       "Content-Type": "application/json",
       Authorization: "Bearer " + process.env.UNISAT_API_KEY,
