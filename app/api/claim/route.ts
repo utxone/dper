@@ -114,7 +114,7 @@ export async function POST(request: Request) {
   let utxo: any[] = [];
   let j = 0;
   while (utxo.length === 0 && j < 5) {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     const utxos = await brc20Api.getAddressUtxo(walletAddress);
     utxo = utxos.filter((u) => u.txId === txid);
     j++;
@@ -154,7 +154,7 @@ export async function POST(request: Request) {
   let inscriptionsUtxos;
   let i = 0;
   while (!inscriptionsUtxos && i < 5) {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     try {
       inscriptionsUtxos = await brc20Api.getInscriptionUtxo(inscriptionId);
     } catch (error) {
