@@ -22,7 +22,7 @@ export default function Home() {
       <div className="mt-24 z-10 flex flex-row items-center space-x-4 text-xl bg-white text-love-500">
         [
         <a
-          href="https://t.me/+zRyFwy-RxJdmYjY1"
+          href="https://x.com/dper_xyz"
           target="_blank"
           className="decoration hover:underline underline-offset-4 cursor-pointer"
         >
