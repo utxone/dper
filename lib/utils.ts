@@ -6,7 +6,6 @@ dayjs.extend(relativeTime);
 export const dateFromNow = (date: string | Date) => {
   return dayjs(date).fromNow(); // 22 years ago
 };
-
 export function compactAddress(address: string) {
   return address.slice(0, 6) + "..." + address.slice(-4);
 }
@@ -36,7 +35,7 @@ export function calculateFee({
   address: string;
 }) {
   const outputSize = getAddressOutputSize(address);
-  const inscriptionBalance = 546; // the balance in each inscription
+  const inscriptionBalance = 330; // the balance in each inscription
   const devFee = DEV_FEE; // the fee for developer
   const transferSize = 57.5 * 2 + (devFee === 0 ? 0 : 43) + outputSize + 10.5; // send ord miner fee
   const firstTransferSize = 154 * feeRate; // gas fee for send balance to inscribe account

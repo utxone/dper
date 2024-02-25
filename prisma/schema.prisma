@@ -16,3 +16,20 @@ model Record {
   hash      String
   txid      String
 }
+
+model Ticker {
+  id                 String   @id @default(cuid())
+  create_at          DateTime @default(now())
+  tick               String
+  inscription_id     String
+  inscription_number Int
+  max                String
+  limit              String
+  decimals           Int
+  minted             String
+  mint_progress      String
+  transactions       Int
+  holders            Int
+  deployer           String
+  deploy_time        Int
+}
