@@ -15,11 +15,7 @@ if (global._bitcore) delete global._bitcore;
 export async function getTickDeployer(tick: string) {
   const res = await fetch(`/api/ticker/${tick}`);
   const result = await res.json();
-  if (result.msg === "ok") {
-    return result.data;
-  } else {
-    throw new Error(result.msg);
-  }
+  return result;
 }
 
 export async function claim({

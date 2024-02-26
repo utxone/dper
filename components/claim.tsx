@@ -229,7 +229,9 @@ const ConfirmModal = ({
           </div>
           <div className="flex flex-row justify-between">
             <span className="font-bold">Total fee</span>
-            <span>{totalFee.total} sats [~{totalUsd} $]</span>
+            <span>
+              {totalFee.total} sats [~{totalUsd} $]
+            </span>
           </div>
         </div>
 
@@ -337,25 +339,24 @@ export default function Claim() {
         return;
       }
       const token = await getTickDeployer(ticker);
+      if (token.msg) {
+        setIsLoading(false);
+        setErrorMsg(token.msg);
+        return;
+      }
       /// check token
       if (token.claimed) {
         setIsLoading(false);
         setErrorMsg(`Sorry, ${ticker} has been claimed`);
         return;
       }
-      /// check block height
-      if (token.deployHeight > HEIGHT) {
-        setIsLoading(false);
-        setErrorMsg(`Sorry, ${ticker} was deployed after block ${HEIGHT}`);
-        return;
-      }
       /// check creator
-      if (token.creator !== account) {
+      if (token.deployer !== account) {
         setIsLoading(false);
         setErrorMsg(
           `${ticker} wa deployed by ${compactAddress(
-            token.creator
-          )}, please connect with that account.`
+            token.deployer
+          )}, please connect with correct account.`
         );
         return;
       }
